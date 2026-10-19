@@ -156,6 +156,17 @@ The repairs listed above for the six round-3 high findings were verified mechani
 
 ---
 
+## Phase B0 — S00 preconditions and build (Stories 1.1-1.7) · 2026-10-19 (in progress)
+
+### Facts
+- **Preconditions:** Git clean and `planning/felles` = `origin/planning/felles` = `b368b86`; `main` = `a85f769`, an ancestor (fast-forward safe, 7 commits). Node: v25.9.0 was active; at Jo's explicit permission (human intervention 1) Node 25.9.0 was uninstalled and Node 24.22.0 LTS (Krypton) installed from the official nodejs.org MSI (SHA-256 matched `SHASUMS256.txt`, signature valid: OpenJS Foundation; admin approval granted by Jo). Preserved: `%APPDATA%
+pm` global packages (cline, codex, dependency-cruiser, jscpd, localtunnel, madge, plato, pnpm), the user and global npm config. `node -v` = v24.22.0, npm 11.3.0 in fresh PowerShell and Bash.
+- **Push approval (PIL-11), recorded once, as instructed by Jo in the message that began this phase:** Jo approves the S00 merge gate (`merge-gate.mjs`) pushing integrated slices and tags to `origin` (`https://github.com/jobendik/felles`) on `main`. Scope: the merge-gate and acceptance pushes of slices and tags to `main`, and pushes of `planning/felles` and `slice/s00`. It does not cover force pushes, other remotes or merges outside the gate.
+- **Fast-forward:** `planning/felles` into `main` performed before Story 1.1, as approved in Amendment 2.
+- **Human interventions in this phase so far:** 2 (start and Gate rule; Node installation permission).
+
+---
+
 ## Next phase
 
 Architecture is final and committed. Next: `bmad-create-epics-and-stories` (BMad catalog: architecture is followed by epics and stories). `bmad-spec` is the skill's optional adoption step and is not required for this pilot. OQ-1…OQ-5 stay deferred; OQ-6 is closed by this phase. Before S00: Jo installs Node 24 LTS.
