@@ -172,6 +172,20 @@ pm` global packages (cline, codex, dependency-cruiser, jscpd, localtunnel, madge
 - **Problems and observations:** (1) three Bash heredocs failed with "unexpected EOF" (known pitfall; the files were then written with the Write tool); (2) the tool layer turned backslash-u escapes in my input into the real characters, which put a raw BOM into two regular expressions and tripped `no-irregular-whitespace` (fixed by building the escape from its code point); (3) ESLint flat config replaces a rule's options per block, so the layer restrictions are composed per directory; (4) several lint rules were first written too broadly (the plugin file tripping its own rules, a LIKE in a `sqlite_master` query) and narrowed; (5) the first slot-state precedence did not match EXPERIENCE.md Flow 1 (a booked slot must read "taken" even after it started) and was corrected from the flow text; (6) for Story 1.22, these files exist but the Story Index does not name them and need default ownership rules: `docs/*.md`, `eslint-fixtures/**`, `scripts/{verify,setup-native,eslint-plugin-felles}.mjs`, `scripts/*.test.mjs`, `apps/api/test/{probes,children,snapshot}/**`, `vitest.config.ts`, `.prettier*`.
 - **Requirement changes:** none. Decisions that no source fixes are listed in `docs/s00-open-design-questions.md` for Gate S00-CP (field-level Norwegian messages, `BOOKING_STARTED` details carrying `action`, the field error code vocabulary, slot state precedence, the lint layer reading).
 
+### Gate S00-CP: decisions recorded (Jo, 2026-10-19)
+
+- **Human intervention 3:** Jo reviewed the checkpoint package and decided, in one message:
+  1. The resource toast texts ("Ressursen er opprettet./lagret./arkivert.") and the `?ny=1` convention are approved.
+  2. `start > now` is approved as the consistent booking-start rule, and its intentional deviation from PRD DEC-08 (`start >= now`) is to be documented. Documented in `packages/contracts/src/rules.ts` (`isInFuture`), in `docs/s00-open-design-questions.md` and here.
+  3. The proposed Norwegian field-error messages are approved, keeping any wording the UX specification fixes, including "Navn er påkrevd." (EXPERIENCE.md, RES-03).
+  4. The `BOOKING_STARTED` `action` discriminator (`approve` | `cancel`) is approved.
+  5. The field-error code vocabulary is approved, and an occupied slot reads "taken" even after its start time.
+  6. The layer-import interpretation (`ui` may import `i18n/*` and `api/links`; `api` may import `i18n/format`) is approved.
+- **Resulting changes (only what the decisions required):** contracts: `requiredMessageNb` makes an empty or missing field named `name` read "Navn er påkrevd." instead of "Må fylles ut." (the only wording the UX spec fixes that the draft had not honoured); comment on `isInFuture`. The database schema is unchanged. Tests: one new case in `packages/contracts/test/text-hygiene.test.ts`, one test input renamed in `errors.test.ts`; 283 tests pass; `npm run verify` green.
+- **Updated checkpoint package** (commit `slice/s00` `18bfd62`, see `git log`): contracts content hash `9af7e4e24c193567286f01d389209ea2f0b44e120acc9b08772a8a3c4973bdc9` (was `595d24e3…` before the change); schema hash unchanged `4186863856f53df10bb2efa0abc3db2fd2f31b17f85949c71c788c561d233108`. The Gate S00-CP freeze package of Story 1.30 must show these hashes or list a diff for re-approval.
+- **Gate state:** decisions recorded and the package updated. Jo's decision on the amended package is the approval the gate story requires; Jo paused implementation before Story 1.8 in the same message ("temporarily pausing implementation to get Agent Orchestrator working and demonstrate its visual workflow"). **Stories 1.8 onward are not started.** The ledger entry for the gate is backfilled by Story 1.23.
+- **Pilot-log push:** Jo authorised pushing the pilot-log-only commit `19feca8` to `main` as a safe fast-forward; this entry is part of the same pilot-log-only change set.
+
 ---
 
 ## Next phase
