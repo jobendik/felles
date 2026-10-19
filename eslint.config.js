@@ -43,6 +43,7 @@ function restrict(paths, regexes = []) {
 const R = {
   appsWeb: ["(^|/)(apps/)?web/src(/|$)", "The API never imports the web (AD-1)."],
   appsApi: ["(^|/)(apps/)?api/src(/|$)", "The web never imports the API (AD-1)."],
+  nodeBuiltins: ["^node:", "contracts has no I/O or environment access (AD-2)."],
   apps: ["(^|/)apps/", "contracts imports nothing from the apps (AD-2)."],
   app: [
     "^(\\.\\./)+app(/|$)",
@@ -122,7 +123,7 @@ export default tseslint.config(
 
   // ---- layering ----
   {
-    files: ["packages/contracts/**/*.ts"],
+    files: ["packages/contracts/src/**/*.ts"],
     rules: {
       "no-restricted-imports": restrict(
         [
@@ -137,7 +138,7 @@ export default tseslint.config(
           message: "contracts has no I/O, no environment access and no app imports (AD-2).",
           ...p,
         })),
-        [R.apps],
+        [R.apps, R.nodeBuiltins],
       ),
     },
   },
