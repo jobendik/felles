@@ -7,6 +7,7 @@ import { tmpdir } from "node:os";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFAULT_DB_PATH, findRepoRoot, openDatabase, type Db } from "../src/platform/db";
+import { migrate } from "../src/platform/migrate";
 
 export interface ChildHandle {
   readonly process: ChildProcess;
@@ -29,7 +30,14 @@ export interface TempDb {
 
 const here = dirname(fileURLToPath(import.meta.url));
 
-export function createTempDb(): TempDb {
+export interface TempDbOptions {
+  /** Apply the migrations of apps/api/db/migrations (default true); `false` gives an empty database. */
+  migrate?: boolean;
+  /** A different migrations directory, for the runner's own tests. */
+  migrationsDir?: string;
+}
+
+export function createTempDb(options: TempDbOptions = {}): TempDb {
   const repoRoot = findRepoRoot(here);
   const directory = mkdtempSync(join(tmpdir(), "felles-test-"));
   const path = join(directory, "felles.db");
@@ -37,6 +45,7 @@ export function createTempDb(): TempDb {
     throw new Error("The temporary database must never be the development database.");
   }
   const db = openDatabase({ dbPath: path, nodeEnv: "test", isVitest: true });
+  if (options.migrate !== false) migrate(db, { dir: options.migrationsDir });
   const children: ChildHandle[] = [];
   let disposed = false;
 
