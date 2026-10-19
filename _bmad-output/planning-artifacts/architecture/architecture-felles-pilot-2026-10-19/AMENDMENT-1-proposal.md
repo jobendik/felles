@@ -1,6 +1,6 @@
-# Amendment 1 (proposed, not applied) — phase-aware traceability gate
+# Amendment 1 (approved with clarifications, applied) — phase-aware traceability gate
 
-Status: **proposal, awaiting Jo's approval.** `ARCHITECTURE-SPINE.md` is unchanged. AD ids stay stable; AD-20, AD-26 and AD-27 are amended in place if approved.
+Status: **approved by Jo in principle and applied 2026-10-19 with the clarifications below.** The sections from "Finding" to "Decision requested" are the original proposal and are kept as the record; where they differ, "As applied" wins.
 
 ## Finding (confirmed)
 
@@ -45,3 +45,34 @@ CI keeps running `verify:full` (green on early commits). Nothing else in AD-27 c
 ## Decision requested
 
 Approve Amendment 1 as written? On approval I apply the three edits, log the decision, re-lint, commit, and continue the epics workflow from the requirements-extraction step. Until then I derive no epics or stories.
+
+
+## As applied (clarifications Jo asked for)
+
+Jo asked that verification fail closed and that the Git model be explicit. Two changes to the original proposal:
+
+1. **Integrated and accepted are both enforced.** Slices merge before Jo accepts them (PIL-12 versus PIL-02), so main would otherwise carry unenforced code between merge and acceptance. The merge gate tags the landed commit `sNN-integrated` and records it in `acceptance-ledger.json`; Jo's acceptance adds `sNN-accepted` and sets the ledger state. The traceability check enforces every ledger slice plus the candidate (`FELLES_SLICE`). ORK-02 reads `accepted`.
+2. **The committed ledger is the fail-closed floor, tags are the integrity anchor.** A missing, unfetched or deleted tag can no longer shrink the set silently: the ledger names the slice, so the missing tag is exit 2. The check also fails on a shallow clone, an unrecorded tag, a tag that does not point at the recorded commit or is not an ancestor of `HEAD`, an unknown or empty set, a slice without evidence parts, unknown ids in titles and absent reporter output.
+
+Branches: tags and the ledger live on `main`; `planning/felles` is fast-forwarded into `main` on Jo's instruction before S00 and then carries no tags. GitHub Actions checks out with `fetch-depth: 0` and `fetch-tags: true`; pull requests resolve tags through the merge commit's history. `verify:release` (`trace.mjs --release`) requires every evidence part of every MUST.
+
+Edits applied: AD-20 (merge gate, tags, ledger, branch rule, freeze list), AD-26 (verification set and exit codes), AD-27 (`verify:full`, `verify:release`, checkout, CI slice derivation), structural seed (`accept-slice.mjs`, `acceptance-ledger.json`), Deferred (tag-protection ruleset needs Jo's approval).
+
+## Validation
+
+A throwaway prototype of the gate logic (scratchpad, not project code) ran against a temporary Git repository: 23 scenarios, all as expected.
+
+| Scenario | Result |
+| --- | --- |
+| S00 integrates with only S00 evidence, S01–S07 absent | exit 0 |
+| S00 candidate missing one S00 test | exit 1 |
+| S01 and S02 candidates, each without the other | exit 0 / exit 0 |
+| S02 rebased on main after S01 is integrated | needs S01 evidence (exit 1), passes once present |
+| Missing test for an integrated slice blocks a later candidate | exit 1 |
+| No `FELLES_SLICE`: every ledger slice still checked | exit 1 on a gap |
+| Skipped test does not count | exit 1 |
+| Ledger missing, tag missing, unrecorded tag, tag off the history, unknown slice, unknown id, no results, shallow clone | exit 2 each |
+| `planning/felles` descended from `main` | resolves and passes |
+| Release with some slices missing, with one E2E-04 part missing, and with everything present | exit 1, 1, 0 |
+
+Not yet verified: the real `trace.mjs` (built in S00) and a real GitHub Actions run; S00's acceptance includes both.
