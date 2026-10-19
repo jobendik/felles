@@ -1,6 +1,7 @@
 // Pure shared rules (AD-2, AD-5, AD-16): booking time rules on civil strings, derived booking state,
 // the 30- and 7-day arithmetic and the text normalisers. No I/O, no Temporal, no app imports.
-import { BOOKING_HORIZON_MS, DASHBOARD_WINDOW_MS, osloDate } from "./time";
+import { z } from "zod";
+import { BOOKING_HORIZON_MS, DASHBOARD_WINDOW_MS, isCivilDate, osloDate } from "./time";
 
 // ---- booking time rules on civil strings (BOK-02, AD-5) ----
 
@@ -171,3 +172,77 @@ export function compareNb(a: string, b: string, aId = 0, bId = 0): number {
   const byText = nbCollator.compare(a, b);
   return byText !== 0 ? byText : aId - bId;
 }
+
+// ---- request text hygiene (AD-2, BR-4) ----
+
+/** C0 and C1 control characters, including tab and newline: every FELLES text field is single-line. */
+// eslint-disable-next-line no-control-regex -- matching control characters is the point of this rule
+export const CONTROL_CHARACTERS = /[\u0000-\u001F\u007F-\u009F]/;
+/** Bidirectional override and isolate characters. */
+export const BIDI_CHARACTERS = /[\u061C\u200E\u200F\u202A-\u202E\u2066-\u2069]/;
+
+export const TEXT_LIMITS = {
+  email: 254,
+  name: 80,
+  description: 500,
+  purpose: 200,
+  reason: 200,
+  location: 80,
+  search: 80,
+} as const;
+
+/**
+ * Free text: control and bidi characters are rejected, then the value is NFC-normalised and trimmed, then
+ * the maximum is enforced on the cleaned value. An empty result fails `required`.
+ */
+export function requiredText(max: number) {
+  return z
+    .string()
+    .refine((value) => !CONTROL_CHARACTERS.test(value), { error: "Ugyldige tegn." })
+    .refine((value) => !BIDI_CHARACTERS.test(value), { error: "Ugyldige tegn." })
+    .normalize("NFC")
+    .trim()
+    .min(1)
+    .max(max);
+}
+
+/** Optional text: an empty or whitespace-only value becomes `null`; omission means no value (or unchanged on PATCH). */
+export function optionalText(max: number) {
+  return z
+    .string()
+    .refine((value) => !CONTROL_CHARACTERS.test(value), { error: "Ugyldige tegn." })
+    .refine((value) => !BIDI_CHARACTERS.test(value), { error: "Ugyldige tegn." })
+    .normalize("NFC")
+    .trim()
+    .max(max)
+    .transform((value) => (value === "" ? null : value))
+    .nullable()
+    .optional();
+}
+
+/** A bodyless mutation declares this body; the client sends `{}` and any key is `VALIDATION_FAILED` (AD-13). */
+export const emptyBody = z.strictObject({});
+
+/** `limit`: default 100, maximum 200, for every list except activity (AD-16). */
+export const listLimit = z.coerce.number().int().min(1).max(200).default(100);
+
+export const idSchema = z.number().int().positive();
+export const idParam = z.strictObject({ id: z.coerce.number().int().positive() });
+
+export const isoInstantSchema = z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
+export const civilDateSchema = z
+  .string()
+  .regex(CIVIL_DATE_PATTERN)
+  .refine((value) => isCivilDate(value), { error: "Ugyldig dato." });
+/** An `HH:mm` on the :00/:30 grid; a refusal carries the field code OFF_GRID or INVALID_TIME. */
+export const civilTimeSchema = z.string().check((ctx) => {
+  const code = checkTimeShape(ctx.value);
+  if (code !== null) {
+    ctx.issues.push({
+      code: "custom",
+      input: ctx.value,
+      message: "Ugyldig klokkeslett.",
+      params: { fieldCode: code },
+    });
+  }
+});

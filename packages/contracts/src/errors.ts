@@ -243,3 +243,38 @@ export function catalogueErrorMap(issue: IssueLike): string | undefined {
 export function installErrorMap(): void {
   z.config({ customError: (issue) => catalogueErrorMap(issue as IssueLike) });
 }
+
+// ---- Zod issues to field errors ----
+
+type ZodIssueLike = {
+  code: string;
+  path: ReadonlyArray<PropertyKey>;
+  message: string;
+  origin?: string;
+  maximum?: number | bigint;
+  input?: unknown;
+  params?: { fieldCode?: FieldErrorCode };
+};
+
+/** Maps validation issues to `fieldErrors`; `path` equals the form field name. */
+export function toFieldErrors(issues: readonly ZodIssueLike[]): FieldError[] {
+  return issues.map((issue) => {
+    let code: FieldErrorCode = "INVALID";
+    let message = issue.message;
+    if (issue.params?.fieldCode !== undefined) {
+      code = issue.params.fieldCode;
+    } else if (issue.code === "too_big" && issue.origin === "string") {
+      code = "TOO_LONG_TEXT";
+      message = fieldMessageNb(code, Number(issue.maximum));
+    } else if (issue.code === "too_small" && issue.origin === "string") {
+      code = "REQUIRED";
+      message = fieldMessageNb(code);
+    } else if (issue.code === "invalid_type") {
+      code = "REQUIRED";
+      message = fieldMessageNb(code);
+    } else {
+      message = fieldMessageNb("INVALID");
+    }
+    return { path: issue.path.map(String).join("."), code, message };
+  });
+}

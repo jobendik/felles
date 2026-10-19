@@ -19,7 +19,7 @@
     "test": "vitest run",
     "build": "node scripts/verify.mjs build",
     "verify": "node scripts/verify.mjs",
-    "contracts:summary": "node scripts/contracts-summary.mjs"
+    "contracts:summary": "node --import tsx scripts/contracts-summary.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.14.0",
