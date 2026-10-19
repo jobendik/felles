@@ -423,7 +423,7 @@ So that parallel agents cannot invent incompatible shapes.
 **Given** the DTOs
 **When** they are reviewed against EXPERIENCE.md
 **Then** `BookingDto` carries the four stored statuses, `expired`, `decision` and `cancellation`, the schedule block is a `detail | anonymous` union discriminated by `kind`, the dashboard has `admin: null | {…}` with the 7-entry chart, and the symbol and colour lists equal DESIGN.md
-**And** a round-trip test parses a canonical sample of every DTO.
+**And** a round-trip test parses a canonical sample of every DTO, in one file per contract file under `packages/contracts/test/`.
 
 **Given** the barrel
 **When** it is built
@@ -521,7 +521,7 @@ So that parallel agents inherit contracts I have approved (PIL-09).
 
 **Given** Jo reviews the package
 **When** Jo approves or requests changes
-**Then** the decision, the contracts content hash and the schema hash are recorded in `pilot-log.md`, and requested changes are made and re-presented until approved
+**Then** the decision, the contracts content hash and the schema hash are recorded in `_bmad-output/pilot-log.md`, and requested changes are made and re-presented until approved
 **And** this approval is the PIL-09 reading accepted for S00.
 
 **Given** later S00 stories change `packages/contracts` or the migrations
@@ -531,7 +531,7 @@ So that parallel agents inherit contracts I have approved (PIL-09).
 **Given** the checkpoint package
 **When** it is assembled
 **Then** it also lists what no source fixes, for Jo to approve or amend: the toast texts "Ressursen er opprettet.", "Ressursen er lagret." and "Ressursen er arkivert.", the slot-picker refusal texts, the `?ny=1` address parameter, and the AD-5 reading that a booking must start strictly after now (`start > now`) where the PRD default DEC-08 says `start ≥ now`
-**And** sprint-status carries the key `gate-s00-cp`, set by the orchestrator, and every S00 story after the gate stays `blocked` until it is `done`; PIL-09 is evidenced by the pilot-log entry, outside the trace check.
+**And** the approval is tracked in the pilot log, and later in the delivery ledger by `ledger.mjs backfill` (Story 1.23); sprint-status carries no gate key and no `blocked` status. The agent stops at the checkpoint and starts no story from 1.8 onward until Jo has explicitly approved in a message that is recorded in the pilot log (an approval is never inferred from a task notification, a subagent report or silence); PIL-09 is evidenced by the pilot-log entry, outside the trace check.
 
 ### Story 1.8: Route registration kernel with stubs
 
@@ -644,7 +644,7 @@ So that every mutation records exactly one event and parallel slices never edit 
 
 **Given** the cross-slice seams
 **When** they are inspected
-**Then** `activity/index.ts` exports `recordEvent` and `listEventsForBooking`, `bookings/index.ts` exports `countFutureBlocking` (implemented and tested against directly inserted rows), `presentBooking`/`presentBlock` signatures and re-exports the typed `BookingsReadPort` from `bookings-read.repository.ts` (an S06-owned stub created by S00 that enumerates `listUpcomingForUser`, `countPendingApprovable`, `countConfirmedInWindow`, `topResourcesInWindow` and `chartBuckets` with stub bodies), `modules/resources/index.ts` is a typed S02 stub exporting `getResource(dbOrTx, id)` and `listSummaries(dbOrTx, ids)`, and the repository signature sets sit in `bookings.repository.ts` (S03), `booking-transitions.repository.ts` (S05) and `bookings-read.repository.ts` (S06), each created by S00 so no slice edits `bookings/index.ts`
+**Then** `activity/index.ts` exports `recordEvent` and `listEventsForBooking`, `bookings/index.ts` exports `countFutureBlocking` (implemented and tested against directly inserted rows), `presentBooking`/`presentBlock` signatures (typed stubs in `bookings.presenter.ts`, an S03-owned file created by S00) and re-exports the typed `BookingsReadPort` from `bookings-read.repository.ts` (an S06-owned stub created by S00 that enumerates `listUpcomingForUser`, `countPendingApprovable`, `countConfirmedInWindow`, `topResourcesInWindow` and `chartBuckets` with stub bodies), `modules/resources/index.ts` is a typed S02 stub exporting `getResource(dbOrTx, id)` and `listSummaries(dbOrTx, ids)`, and the repository signature sets sit in `bookings.repository.ts` (S03), `booking-transitions.repository.ts` (S05) and `bookings-read.repository.ts` (S06), each created by S00 so no slice edits `bookings/index.ts`
 **And** the table-name lint rule passes with `activity` naming only `activity_events` and `bookings` naming only `bookings`.
 
 ### Story 1.12: Deterministic demo data and reset
@@ -873,7 +873,7 @@ So that earlier work is never blocked by later slices and nothing is silently sk
 
 **Given** the ledger, tags, reporters and `FELLES_SLICE`
 **When** `trace.mjs` runs
-**Then** it enforces the verification set of AD-26 (ledger slices plus `FELLES_SLICE`), exits 1 when an evidence part of a slice in the set has no passing test, and writes `trace.json` (`reqId, file, title, status, sha, dirty, tool, runAt`) to `_bmad-output/evidence/` keyed by SHA
+**Then** it enforces the verification set of AD-26 (ledger slices plus `FELLES_SLICE`), exits 1 when an evidence part of a slice in the set has no passing test, and writes `trace.json` (`reqId, file, title, status, sha, dirty, tool, runAt`) to `_bmad-output/evidence/` keyed by SHA (a main-only path; the file is not part of the commit it describes)
 **And** failed, skipped and todo tests never count, and SHOULD parts are reported as residual work without blocking.
 
 **Given** `npm run verify:full`
@@ -905,7 +905,7 @@ So that I can decide on acceptance from complete evidence.
 
 **Given** `manual-evidence/<reqId>.md`
 **When** it records a non-automatable part
-**Then** it must name the tested parent commit, the tester, the date, the tool or procedure and the result, and `--release` accepts a commit whose only changes against the cited commit are under `manual-evidence/**` or are main-only paths (`acceptance-ledger.json`, `pilot-log.md`, `_bmad-output/implementation-artifacts/**`)
+**Then** it must name the tested parent commit, the tester, the date, the tool or procedure and the result, and `--release` accepts a commit whose only changes against the cited commit are under `manual-evidence/**` or are main-only paths (`acceptance-ledger.json`, `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**`, `_bmad-output/implementation-artifacts/**`); a change to the lockfile or to dependency files between the cited commit and landing is not allowed, because it changes what was tested
 **And** the file is owned by S07 once `s00-accepted` exists.
 
 **Given** the gate-type parts (NFR-02, RUN-1, SEED-1, UI-2)
@@ -928,7 +928,7 @@ So that parallel agents cannot touch each other's files or frozen contracts.
 
 **Given** the frozen list of AD-20
 **When** the check classifies paths
-**Then** `packages/contracts/**`, migrations 0001–0099, route and nav tables, existing `ui/` primitives, configs, root scripts, `ownership.json`, `requirements.json` and `acceptance-ledger.json` are frozen, files added under `ui/` pass, `packages/contracts/src/{activity,dashboard}.ts` and the schedule DTO exports belong to S03 until `s03-accepted`, and `_bmad-output/implementation-artifacts/**`, `pilot-log.md` and `acceptance-ledger.json` are main-only
+**Then** `packages/contracts/**`, migrations 0001–0099, route and nav tables, existing `ui/` primitives, configs, root scripts, `ownership.json`, `requirements.json` and `acceptance-ledger.json` are frozen, files added under `ui/` pass, `packages/contracts/src/{activity,dashboard}.ts` and the schedule DTO exports belong to S03 until `s03-accepted`, and `_bmad-output/implementation-artifacts/**`, `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**` and `acceptance-ledger.json` are main-only
 **And** S07 may edit any non-frozen file when the commit carries a `Fixes: N.M` trailer, and `README.md` and `manual-evidence/**` map to S07 after `s00-accepted`.
 
 **Given** S00 creates stubs, seam entries, barrels or helpers for other slices
@@ -938,7 +938,7 @@ So that parallel agents cannot touch each other's files or frozen contracts.
 
 **Given** paths that no Owns cell names
 **When** `ownership.json` is generated
-**Then** default rules apply: a colocated test (`*.test.ts(x)`) and a page entry file (`*Page.tsx`) follow the owner of their folder or sibling source; `packages/contracts/test/{activity,dashboard,schedule}.test.ts` follow the owner of the contract file; the lockfile and root and workspace dependency files are changed only by an integrator commit on main; a test that asserts a stub's behaviour lives beside the stub, belongs to the replacing slice and is replaced with it
+**Then** default rules apply: a colocated test (`*.test.ts(x)`) follows the owner of its sibling source; the files directly inside `apps/web/src/features/<f>/` (`index.tsx`, `*Page.tsx`) follow the slice that owns the feature's sub-folders (`features/resources/` is S02), except the seam entry bodies of `features/bookings/index.tsx` and `features/booking-actions/index.tsx`, which `ownership.json` assigns per body as in Story 1.27; API tests of a slice live under `apps/api/test/<slice>/**` and its helper in `apps/api/test/helpers/<slice>.ts`; `packages/contracts/test/<file>.test.ts` follows the owner of the contract file (S00 unless the file is S03's draft); the lockfile and root and workspace dependency files are frozen and change only with a `Freeze-Approved:` trailer; a test that asserts a stub's behaviour lives beside the stub, belongs to the replacing slice and is replaced with it, and tests of S00-owned code inject their collaborators (a page component, a pending count) instead of asserting a stub's output
 **And** a path that still has no owner fails the test of this story and is added to `ownership.json` by this story.
 
 **Given** `npm run verify` on `slice/sNN` or with `FELLES_SLICE` set
@@ -969,8 +969,8 @@ So that the bookkeeping the gates rely on is deterministic whether a human or Ag
 
 **Given** `scripts/ledger.mjs status <N.M> <state>` and `scripts/ledger.mjs gate S00-CP done --approval <PL-id>`
 **When** they run
-**Then** sprint-status moves only along `backlog`, `ready-for-dev`, `in-progress`, `review`, `done` is reserved for `accept-slice.mjs`, and the key `gate-s00-cp` is set only with a pilot-log approval id
-**And** every other S00 story after the gate reads as `blocked` until that key is `done`.
+**Then** sprint-status moves only along `backlog`, `ready-for-dev`, `in-progress`, `review`, `done` is reserved for `accept-slice.mjs`, and the gate is recorded in the ledger (`acceptance-ledger.json` gate entry) only with a pilot-log approval id
+**And** `ledger.mjs status` refuses to move any S00 story after the gate (1.8 onward) to `in-progress` while that ledger gate entry is missing, and sprint-status keeps its native vocabulary.
 
 **Given** `scripts/ledger.mjs pilot-log` with wall-clock, agent runs, interventions, test failures, review findings and tokens or cost
 **When** it runs
@@ -979,7 +979,7 @@ So that the bookkeeping the gates rely on is deterministic whether a human or Ag
 
 **Given** the stories and the gate decision recorded before this script exists
 **When** `ledger.mjs backfill` runs once
-**Then** it imports the pilot-log entry for Gate S00-CP, sets `gate-s00-cp`, and creates ledger entries for Stories 1.1–1.22 from the recorded commits, marking them `backfilled`
+**Then** it imports the pilot-log entry for Gate S00-CP, records the gate in the ledger, and creates ledger entries for Stories 1.1–1.22 from the recorded commits, marking them `backfilled`
 **And** `ledger.mjs story` also accepts `--report <path>` and `--verify-result <path>` so the PIL-02 fields are recorded.
 
 **Given** a fixture repository
@@ -1056,7 +1056,7 @@ So that I can reach every page on a phone or a desktop and always see who I am.
 
 **Given** an Administrator with pending requests
 **When** the Godkjenninger pill and the Mer tab render
-**Then** the pill's accessible name is "Godkjenninger, 3 venter" (the count from `usePendingCount`), the Mer count dot reads "3 ventende godkjenninger", and sticky bars never cover a focused element (`scroll-padding-top: 56px`, `scroll-padding-bottom: 64px` on the scroll root)
+**Then** the pill's accessible name is "Godkjenninger, 3 venter" (the count from `usePendingCount`, injected by the test because the S00 body returns `null`), the Mer count dot reads "3 ventende godkjenninger", and sticky bars never cover a focused element (`scroll-padding-top: 56px`, `scroll-padding-bottom: 64px` on the scroll root)
 **And** the viewport and horizontal-scroll checks run with the Playwright harness at 375 and 1440 px.
 
 ### Story 1.27: Router, titles, focus, seams and access pages
@@ -1069,7 +1069,7 @@ So that navigation, deep links and refresh work for everyone.
 
 **Given** the router
 **When** any route is opened
-**Then** all nine Norwegian routes render stub pages from files owned by their feature through lazy loading, document titles read "FELLES – {page}" from the route table `titleKey`, there is one `h1` per surface, focus moves to it on route change, a "Hopp til innhold" skip link is first, landmarks and `lang="nb"` are present
+**Then** all nine Norwegian routes render, in a test that injects a test page component per route so that it does not depend on any stub's output, the pages from files owned by their feature through lazy loading, document titles read "FELLES – {page}" from the route table `titleKey`, there is one `h1` per surface, focus moves to it on route change, a "Hopp til innhold" skip link is first, landmarks and `lang="nb"` are present
 **And** an Administrator route opened by a Member shows "Ingen tilgang" from the 403 with the action "Til Hjem", and an unknown route shows "Fant ikke siden.".
 
 **Given** the seam entry files
@@ -2312,7 +2312,7 @@ So that I can decide whether to accept the product and judge the workflow.
 
 ## Story Index (task cards, PIL-05)
 
-Every story belongs to exactly one slice. This index carries the PIL-05 task-card fields that the template does not hold; it is the source from which `requirements.json` (Story 1.19) and `ownership.json` (Story 1.22) are generated. *Owns* cells are path globs only (most specific glob wins). Each path has one owner at any time; a path an S00 row creates for another slice is a `(stub)` recorded as `createdBy: S00` and owned by the later slice after `s00-accepted`; anything not listed is frozen or another slice's. `README.md` and `manual-evidence/**` belong to S00 until `s00-accepted` and to S07 afterwards.
+Every story belongs to exactly one slice. This index carries the PIL-05 task-card fields that the template does not hold; it is the source from which `requirements.json` (Story 1.19) and `ownership.json` (Story 1.22) are generated. *Owns* cells are path globs only (most specific glob wins; the default rules of Story 1.22 cover what a cell leaves out). Each path has one owner at any time; a path an S00 row creates for another slice is a `(stub)` recorded as `createdBy: S00` and owned by the later slice after `s00-accepted`; anything not listed is frozen or another slice's. `README.md` and `manual-evidence/**` belong to S00 until `s00-accepted` and to S07 afterwards.
 
 ### Branching and integration model
 
@@ -2338,42 +2338,42 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 
 | Story | Slice | Depends on | Evidence parts | Owns |
 | --- | --- | --- | --- | --- |
-| 1.1 | S00 | precondition: planning/felles fast-forwarded | NFR-02@S00 | root configs, `eslint.config.js`, workspace `package.json` and `tsconfig*`, `.nvmrc`, `.npmrc`, `.gitattributes`, `.env.example`, `.gitignore`, `apps/web/src/main.tsx`, `vite.config.ts` per workspace |
+| 1.1 | S00 | precondition: planning/felles fast-forwarded | NFR-02@S00 | root `package.json`, `tsconfig*.json` and `*.config.{js,mjs,ts}` (including `eslint.config.js`), root dotfiles (`.nvmrc`, `.npmrc`, `.gitattributes`, `.env.example`, `.gitignore`), `apps/*/package.json`, `apps/*/tsconfig*.json`, `apps/*/vite.config.ts`, `apps/web/src/main.tsx`, `packages/*/package.json`, `packages/*/tsconfig*.json` |
 | 1.2 | S00 | 1.1 | BOK-02@S00, BR-1@S00 | `packages/contracts/src/{errors,time,rules,availability}.ts` |
 | 1.3 | S00 | 1.1, 1.2 | BR-1@S00, NFR-04@S00 | `apps/api/src/platform/{clock,oslo-time,logger}.ts`, `apps/api/src/config.ts` |
-| 1.4 | S00 | 1.2 | BR-4@S00 | `packages/contracts/src/{routes,session,resources,bookings,index}.ts`, `packages/contracts/src/{schedule,activity,dashboard}.ts` (stub), `scripts/contracts-summary.mjs` |
+| 1.4 | S00 | 1.2 | BR-4@S00 | `packages/contracts/src/{routes,session,resources,bookings,index}.ts`, `packages/contracts/src/{schedule,activity,dashboard}.ts` (stub), `scripts/contracts-summary.mjs`, `packages/contracts/test/**` (S00, except `{activity,dashboard,schedule}.test.ts`) |
 | 1.5 | S00 | 1.1, 1.2, 1.3 | BR-5@S00 | `apps/api/src/platform/{db,unit-of-work,app-error}.ts`, `apps/api/test/temp-db.ts` |
-| 1.6 | S00 | 1.5 | — | `apps/api/src/platform/migrate.ts`, snapshot harness under `apps/api/test/` |
-| 1.7 | S00 | 1.6 | BR-3@S00, BR-5@S00 | `apps/api/db/migrations/0001–0099`, schema snapshot, probe suite |
+| 1.6 | S00 | 1.5 | — | `apps/api/src/platform/migrate.ts`, `apps/api/test/snapshot/**` |
+| 1.7 | S00 | 1.6 | BR-3@S00, BR-5@S00 | `apps/api/db/migrations/0001–0099`, `apps/api/test/snapshot/**`, `apps/api/test/probes/**` |
 | Gate S00-CP | S00 | 1.2–1.7 (human gate) | PIL-09 (process) | `pilot-log.md` entry only |
 | 1.8 | S00 | Gate S00-CP, 1.4, 1.5 | BR-4@S00 | `apps/api/src/http/register-route.ts`, `apps/api/src/app.ts`, `apps/api/src/server.ts`, `apps/api/test/app-factory.ts`, stub handlers in the module route files named in the story (stub) |
 | 1.9 | S00 | 1.8 | NFR-04@S00 | `apps/api/src/http/{origin-guard,host-guard,static}.ts` |
 | 1.10 | S00 | 1.7, 1.8 | NFR-04@S00 | `apps/api/src/platform/{password,tokens}.ts`, `modules/auth/{sessions.repository,session.service,index}.ts`, `modules/auth/domain/policy.ts`, `http/session-plugin.ts`, `apps/api/test/clients.ts` |
-| 1.11 | S00 | 1.7, 1.8 | BR-5@S00 | `modules/activity/{index,writer,activity-events.repository}.ts`, `modules/bookings/{index,bookings.presenter}.ts`, `modules/bookings/{bookings.repository,booking-transitions.repository,bookings-read.repository}.ts` (stub), `modules/resources/index.ts` (stub) |
+| 1.11 | S00 | 1.7, 1.8 | BR-5@S00 | `modules/activity/{index,writer,activity-events.repository}.ts`, `modules/bookings/index.ts`, `modules/bookings/{bookings.presenter,bookings.repository,booking-transitions.repository,bookings-read.repository}.ts` (stub), `modules/resources/index.ts` (stub) |
 | 1.12 | S00 | 1.10, 1.11 | SEED-1@S00, SEED-2@S00 | `apps/api/db/seed/**`, `scripts/demo-reset.mjs`, `apps/api/test/booking-fixtures.ts` |
 | 1.13 | S00 | Gate S00-CP, 1.4 | UI-5@S00 | `apps/web/src/api/**`, `apps/web/src/i18n/**`, `apps/web/src/test/**`, `apps/web/src/api/keys/**` and `i18n/nb/**` barrels and files (stub) |
 | 1.14 | S00 | 1.13 | — | `scripts/gen-tokens.mjs`, `apps/web/src/styles/**`, `apps/web/src/ui/timing.ts` |
 | 1.15 | S00 | 1.13, 1.14 | UI-3@S00, UI-4@S00 | `apps/web/src/ui/{Button,Field,Input,Select,Textarea,Alert,Toast,Skeleton,EmptyState,Badge}*` |
 | 1.16 | S00 | 1.15 | UI-3@S00 | `apps/web/src/ui/{Sheet,Dialog,ReasonDialog,ConfirmDialog,Popover,Tooltip}*` |
 | 1.17 | S00 | 1.13, 1.15 | UI-3@S00 | `apps/web/src/ui/{Card,ResourceCard,ResourceIcon,BookingRow,Timeline,Table,ChipGroup,SegmentedControl}*` |
-| 1.18 | S00 | 1.9, 1.10, 1.12 | — | `e2e/playwright.config.ts`, `e2e/support/**`, per-slice `e2e/<slice>.spec.ts` placeholders (stub) |
+| 1.18 | S00 | 1.9, 1.10, 1.12 | — | `e2e/playwright.config.ts`, `e2e/support/**` (stubs `s01.ts`–`s07.ts`) |
 | 1.19 | S00 | Gate S00-CP, 1.1 | — | `requirements.json`, `scripts/gen-requirements.mjs`, `acceptance-ledger.json` (stub) |
-| 1.20 | S00 | 1.19 | — | `scripts/trace.mjs`, reporter configuration |
+| 1.20 | S00 | 1.19 | — | `scripts/trace.mjs`, `scripts/trace-reporter.mjs`, `vitest.config.ts`, `e2e/playwright.config.ts` |
 | 1.21 | S00 | 1.20 | — | `package.json` script `verify:release`, `manual-evidence/` convention |
 | 1.22 | S00 | Gate S00-CP, 1.1 | — | `ownership.json`, `scripts/check-ownership.mjs` |
 | 1.23 | S00 | 1.19, 1.22 | — | `scripts/ledger.mjs`, story ledger files under `_bmad-output/implementation-artifacts/` |
 | 1.24 | S00 | 1.18, 1.20, 1.22, 1.23 | — | `scripts/merge-gate.mjs` |
 | 1.25 | S00 | 1.24 | — | `scripts/accept-slice.mjs` |
-| 1.26 | S00 | 1.13, 1.15, 1.16, 1.17, 1.18 | UI-2@S00, UI-3@S00 | `apps/web/src/app/{shell,providers}/**`, `apps/web/src/ui/Avatar*`, web Vitest helper |
+| 1.26 | S00 | 1.13, 1.15, 1.16, 1.17, 1.18 | UI-2@S00, UI-3@S00 | `apps/web/src/app/{shell,providers}/**`, `apps/web/src/ui/Avatar*`, `apps/web/src/test/**` |
 | 1.27 | S00 | 1.10, 1.26 | UI-2@S00 | `apps/web/src/app/{router,routes}.tsx`, stub pages and seam entry files `features/*/index.tsx` (stub) |
-| 1.28 | S00 | 1.26 | UI-4@S00 | `apps/web/src/ui/QueryState*`, offline alert |
+| 1.28 | S00 | 1.26 | UI-4@S00 | `apps/web/src/ui/{QueryState,OfflineAlert}*` |
 | 1.29 | S00 | 1.9, 1.12, 1.21, 1.24, 1.27 | RUN-1@S00 | `scripts/{start,dev,build-api,smoke}.mjs`, `.github/workflows/ci.yml`, `README.md` |
-| 1.30 | S00 | 1.1–1.29, Gate S00-CP | — | throwaway fixture slice `S99`, freeze package document |
+| 1.30 | S00 | 1.1–1.29, Gate S00-CP | — | throwaway fixture slice `S99` (scratch clone only), `_bmad-output/implementation-artifacts/s00-freeze-package.md` (main-only) |
 | 2.1 | S01 | S00 accepted | AUT-01@S01, AUT-02@S01, AUT-04@S01, NFR-04@S01, BR-4@S01 | `modules/auth/{users.repository,login.use-case,logout.use-case,routes}.ts` |
 | 2.2 | S01 | 2.1 | NFR-04@S01 | `modules/auth/throttle.ts` |
-| 2.3 | S01 | 2.1 | AUT-03@S01, AUT-02@S01, BR-6@S01, E2E-07@S01, NFR-03@S01 | `apps/api/test/helpers/s01.ts`, S01 API tests |
+| 2.3 | S01 | 2.1 | AUT-03@S01, AUT-02@S01, BR-6@S01, E2E-07@S01, NFR-03@S01 | `apps/api/test/helpers/s01.ts`, `apps/api/test/s01/**` |
 | 2.4 | S01 | 2.1, 2.2 | AUT-01@S01, UI-1@S01, UI-3@S01, UI-4@S01, UI-5@S01 | `apps/web/src/features/auth/**`, `i18n/nb/auth.ts`, `api/keys/session.ts` |
-| 2.5 | S01 | 2.1 | AUT-02@S01, AUT-04@S01 | S01 API tests |
+| 2.5 | S01 | 2.1 | AUT-02@S01, AUT-04@S01 | `apps/api/test/s01/**` |
 | 2.6 | S01 | 2.4, 2.5 | AUT-01@S01, AUT-04@S01, UI-1@S01 | `e2e/auth.spec.ts`, `e2e/support/s01.ts` |
 | 3.1 | S02 | S00 accepted | RES-01@S02, RES-02@S02, AUT-03@S02, NFR-03@S02 | `modules/resources/{resources.repository,list-resources.use-case,get-resource.use-case,presenter,routes,index}.ts` |
 | 3.2 | S02 | 3.1 | RES-02@S02, RES-03@S02, BR-2@S02, BR-4@S02, BR-5@S02, E2E-07@S02, NFR-03@S02 | `modules/resources/{create-resource,update-resource}.use-case.ts` |
@@ -2383,10 +2383,10 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 | 3.6 | S02 | 3.2 | RES-03@S02, UI-3@S02, UI-4@S02, UI-5@S02 | `apps/web/src/features/resources/form-sheet/**`, `apps/web/src/ui/{Switch,RadioGroup}.tsx` (new) |
 | 3.7 | S02 | 3.3, 3.6 | RES-03@S02, RES-04@S02, UI-1@S02, UI-3@S02, UI-4@S02 | `apps/web/src/features/resources/admin/**`, `e2e/resources.spec.ts`, `apps/api/test/helpers/s02.ts`, `e2e/support/s02.ts` |
 | 4.1 | S03 | S01 and S02 accepted | BOK-01@S03, BOK-02@S03, BOK-03@S03, BOK-05@S03, BR-2@S03, BR-3@S03, BR-4@S03, BR-5@S03, RES-04@S03, E2E-08@S03 | `modules/bookings/{bookings.repository,create-booking.use-case,bookings.presenter,routes}.ts` |
-| 4.2 | S03 | 4.1 | BOK-03@S03, BOK-04@S03, E2E-02@S03, E2E-03@S03, NFR-03@S03 | `apps/api/test/helpers/s03.ts`, concurrency suites |
+| 4.2 | S03 | 4.1 | BOK-03@S03, BOK-04@S03, E2E-02@S03, E2E-03@S03, NFR-03@S03 | `apps/api/test/helpers/s03.ts`, `apps/api/test/s03/**` |
 | 4.3 | S03 | 4.1 | VIS-02@S03, AUT-03@S03 | `modules/bookings/{list-bookings,get-booking}.use-case.ts` |
 | 4.4 | S03 | 4.1 | VIS-01@S03 | `modules/bookings/schedule.use-case.ts`, `packages/contracts/src/schedule.ts` (S03 until `s03-accepted`) |
-| 4.5 | S03 | 4.1–4.4 | BR-1@S03, BOK-02@S03, E2E-01@S03, E2E-02@S03, E2E-03@S03, E2E-07@S03, NFR-03@S03 | `packages/contracts/src/{activity,dashboard}.ts` and `packages/contracts/test/{activity,dashboard,schedule}.test.ts` (S03 until `s03-accepted`), S03 tests |
+| 4.5 | S03 | 4.1–4.4 | BR-1@S03, BOK-02@S03, E2E-01@S03, E2E-02@S03, E2E-03@S03, E2E-07@S03, NFR-03@S03 | `packages/contracts/src/{activity,dashboard}.ts` and `packages/contracts/test/{activity,dashboard,schedule}.test.ts` (S03 until `s03-accepted`), `apps/api/test/s03/**` |
 | 4.6 | S04 | S03 accepted | BOK-07@S04, UI-3@S04, UI-4@S04 | `apps/web/src/features/bookings/slot-picker/**`, `apps/web/src/ui/useRovingGrid.ts` (new) |
 | 4.7 | S04 | 4.6 | BOK-01@S04, BOK-07@S04, UI-3@S04, UI-4@S04, UI-5@S04 | `apps/web/src/features/bookings/booking-sheet/**`, `features/bookings/index.tsx` (`BookingSheet` body), `i18n/nb/bookings.ts`, `api/keys/bookings.ts` |
 | 4.8 | S04 | S03 accepted | VIS-02@S04, UI-3@S04, UI-4@S04 | `apps/web/src/features/bookings/detail-sheet/**`, `features/bookings/index.tsx` (`BookingDetailHost` body) |
@@ -2401,7 +2401,7 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 | 5.2 | S05 | 5.1 | BOK-06@S05, BR-3@S05, BR-4@S05, E2E-06@S05 | `modules/bookings/cancel-booking.use-case.ts`, `transitions.routes.ts` |
 | 5.3 | S05 | 5.1 | APP-01@S05, UI-1@S05, UI-3@S05, UI-4@S05, UI-5@S05 | `apps/web/src/features/approvals/**`, `i18n/nb/approvals.ts`, `e2e/approvals.spec.ts`, `e2e/support/s05.ts`, `apps/web/src/api/keys/approvals.ts` |
 | 5.4 | S05 | 5.1, 5.2 | BOK-06@S05, VIS-02@S05, UI-3@S05, UI-4@S05 | `apps/web/src/features/booking-actions/**` (including `index.tsx` `BookingActions` body), `i18n/nb/booking-actions.ts`, `apps/web/src/api/keys/booking-actions.ts` |
-| 5.5 | S05 | 5.1–5.4 | E2E-04@S05, E2E-05@S05, E2E-06@S05, E2E-09@S05, E2E-07@S05, NFR-03@S05 | `apps/api/test/helpers/s05.ts`, S05 API tests |
+| 5.5 | S05 | 5.1–5.4 | E2E-04@S05, E2E-05@S05, E2E-06@S05, E2E-09@S05, E2E-07@S05, NFR-03@S05 | `apps/api/test/helpers/s05.ts`, `apps/api/test/s05/**` |
 | 6.1 | S06 | S03 accepted | VIS-03@S06, VIS-04@S06 | `modules/dashboard/**`, `modules/bookings/bookings-read.repository.ts` |
 | 6.2 | S06 | S03 accepted | VIS-05@S06, BR-5@S06 | `modules/activity/{activity-feed.repository,list-activity.use-case,routes}.ts`, `apps/api/test/helpers/s06.ts` |
 | 6.3 | S06 | 6.1 | VIS-03@S06, UI-1@S06, UI-3@S06, UI-4@S06, UI-5@S06 | `apps/web/src/features/dashboard/**`, `apps/web/src/ui/StatTile.tsx` (new), `i18n/nb/dashboard.ts`, `api/keys/dashboard.ts` (`usePendingCount`), `e2e/overview.spec.ts`, `e2e/support/s06.ts` |
@@ -2414,7 +2414,7 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 | 7.5 | S07 | S04, S05 and S06 accepted | NFR-06@S07 | `manual-evidence/NFR-06.md`, `apps/api/test/perf/measure.ts` |
 | 7.6 | S07 | 7.1–7.5 | NFR-05@S07, RUN-1@S07 | `README.md`, `manual-evidence/NFR-05.md` |
 | 7.7 | S07 | 7.6 | NFR-01@S07 | `manual-evidence/NFR-01.md` |
-| 7.8 | S07 | 7.1–7.7 | — | `manual-evidence/**`, evidence pack document (the pilot-log entry is written by `ledger.mjs` on main) |
+| 7.8 | S07 | 7.1–7.7 | — | `manual-evidence/**`, `_bmad-output/implementation-artifacts/s07-evidence-pack.md` (main-only; the pilot-log entry is written by `ledger.mjs` on main) |
 
 ## Coverage Tables
 

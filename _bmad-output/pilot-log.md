@@ -133,6 +133,29 @@ The repairs listed above for the six round-3 high findings were verified mechani
 
 ---
 
+## Phase A5 — Sprint planning and readiness (bmad-sprint-planning) · 2026-10-19
+
+### Facts
+- **Wall clock:** first command 19:54 (Europe/Oslo); presented for approval shortly after 20:00. Start of the user message `unknown`; about 10 min of work.
+- **Human intervention 1:** Jo's brief (run the standard workflow; review the 14 residual risks; no silent architecture or story changes; no application code, no Agent Orchestrator, no merge to `main`; present and stop). The model was switched to Sonnet 5.5 for this phase by Jo (`/model`).
+- **Artifacts:** `_bmad-output/planning-artifacts/implementation-readiness.md` (verdict CONCERNS, awaiting approval); `_bmad-output/implementation-artifacts/sprint-status.yaml` (7 epics, 76 stories, all `backlog`, 7 retrospectives `optional`; script validation passes). Not committed. No spine or `epics.md` text changed.
+- **Checks:** script dry-run and generate (3 warnings, all non-story headings); one fresh read-only verifier agent re-checked the six round-3 highs against current text (101,047 subagent tokens, 174 s). Main session tokens: approximate, not read from the counter (`unknown`); cost `unknown`.
+- **Results of the verifier:** 3b H1 and H2 closed; 3a H1-H4 partial, none blocking. The model spot-checked two claims against `epics.md` (presenter owned by Story 1.11 and Story 4.1; `pilot-log.md` named without `_bmad-output/`) and both held.
+- **Findings new in this phase:** (1) `bookings.presenter.ts` has two owners; (2) the release rule names a path that does not exist; (3) the stub-asserting-test rule was written but not applied in 1.27 AC1 and 1.26 AC4; (4) Gate S00-CP requires a `blocked` status and a `gate-s00-cp` key that the installed sprint-status vocabulary and script do not provide; (5) EXPERIENCE flow text disagrees with the seed in places no AC asserts; (6) `## Epic List` is empty.
+- **Problems:** two tool calls were malformed (a blocked `sleep`, a `Monitor` call without its schema); no effect on artifacts.
+
+- **Human intervention 2 (after 20:00):** Jo approved the CONCERNS assessment and decided: **Gate S00-CP** is tracked in this pilot log and later backfilled into the delivery ledger (Story 1.23); BMad's sprint-status vocabulary is not customised; the agent must stop at the checkpoint and not proceed until Jo explicitly approves. **Story sizes:** keep the 76; monitor 1.13, 1.24, 1.30, 5.1 (and 1.1, 1.7, 1.4, 1.20, 4.2 from the register); propose a split only if implementation shows a need. **Repairs:** apply the three corrections (ownership, permitted paths, stub tests), run a focused consistency check, finalize, commit and push; do not merge to `main`, start S00 or install Agent Orchestrator.
+- **Repairs applied (epics only; spine unchanged):** see the Resolution section of `implementation-readiness.md`. The Gate S00-CP acceptance criterion and Stories 1.23 (ledger gate entry, backfill) were reworded to match Jo's tracking decision. The lockfile "integrator commit" rule (no owning story) was replaced by the existing `Freeze-Approved:` trailer; this is an interpretation of the authorised ownership repair and is stated for Jo to confirm.
+- **Focused consistency check:** script dry run in sync (7 epics, 76 stories); Index scan shows only intended multi-slice paths; grep found no leftovers. Not independently re-validated.
+- **Register updates:** item 1 now: repaired and consistency-checked, partial findings 3a H1-H4 closed in text, still not independently re-validated. Item 5: unchanged (run 1.26 and 1.27 together; the offline typeface assertion owner remains the Story 1.14 agent). Item 8: decided, keep and monitor. New: EXPERIENCE flow text versus seed (medium, left open). **Gate S00-CP decision record:** the approval is not yet given; the agent stops after Story 1.7 and waits for Jo's explicit approval, which will be logged here with the contracts and schema hashes.
+- **Resource usage for the phase:** one verifier agent (101,047 subagent tokens, 174 s); main session not read from the counter (`unknown`); cost `unknown`. Human interventions: 2.
+
+### Interpretations
+- A fifth independent read again found cross-document defects (ownership, paths) in a document whose last repairs were verified only mechanically, which agrees with register item 10. The defects are small; the first real gate run (Story 1.30) is the better test of them than a further validation round.
+- The tracking vocabulary of the installed skill is narrower than what the epics assume, a mismatch that no earlier check could see because sprint-status did not exist.
+
+---
+
 ## Next phase
 
 Architecture is final and committed. Next: `bmad-create-epics-and-stories` (BMad catalog: architecture is followed by epics and stories). `bmad-spec` is the skill's optional adoption step and is not required for this pilot. OQ-1…OQ-5 stay deferred; OQ-6 is closed by this phase. Before S00: Jo installs Node 24 LTS.

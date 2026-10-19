@@ -1,0 +1,133 @@
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created, ready for development
+#   - in-progress: Developer actively working on implementation
+#   - review: Implementation complete, ready for review
+#   - done: Story completed
+
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+
+# Action Item Status:
+#   - open: Committed during a retrospective, not yet addressed
+#   - in-progress: Actively being worked on
+#   - done: Completed
+
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when its first story starts (via build's sprint sync)
+# - Stories can be worked in parallel if team capacity allows
+# - Developer typically creates the next story after the previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+# - Retrospective appends its action items to action_items; the status view surfaces open ones
+generated: 10-19-2026 19:55
+last_updated: 10-19-2026 19:55
+project: felles-pilot
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+development_status:
+  epic-1: backlog
+  1-1-scaffold-the-workspaces-and-a-green-verify-gate-on-a-clean-i: backlog
+  1-2-shared-rules-normalisers-and-approved-messages-in-contracts: backlog
+  1-3-clock-oslo-time-configuration-and-logging: backlog
+  1-4-the-complete-route-and-dto-contract-set: backlog
+  1-5-database-platform-apperror-and-the-unit-of-work: backlog
+  1-6-migration-runner-and-schema-snapshot-harness: backlog
+  1-7-the-whole-schema-triggers-and-probe-suite: backlog
+  1-8-route-registration-kernel-with-stubs: backlog
+  1-9-http-hardening-static-serving-and-request-logging: backlog
+  1-10-password-hashing-session-resolution-and-policy: backlog
+  1-11-activity-event-writer-and-cross-slice-seam-signatures: backlog
+  1-12-deterministic-demo-data-and-reset: backlog
+  1-13-web-data-layer-strings-and-formatting: backlog
+  1-14-design-tokens-and-inter: backlog
+  1-15-form-and-feedback-primitives: backlog
+  1-16-overlay-primitives-and-dialogs: backlog
+  1-17-shared-display-components: backlog
+  1-18-playwright-harness: backlog
+  1-19-requirement-inventory-and-the-empty-ledger: backlog
+  1-20-trace-default-verification-set-and-integrity-exits: backlog
+  1-21-release-gate-and-manual-evidence: backlog
+  1-22-ownership-check: backlog
+  1-23-delivery-ledger-script: backlog
+  1-24-merge-gate: backlog
+  1-25-slice-acceptance: backlog
+  1-26-app-shell-and-navigation: backlog
+  1-27-router-titles-focus-seams-and-access-pages: backlog
+  1-28-querystate-and-the-offline-alert: backlog
+  1-29-start-scripts-readme-skeleton-and-ci-with-the-phased-macos-s: backlog
+  1-30-hello-slice-dry-run-first-gate-run-and-the-s00-freeze-packag: backlog
+  epic-1-retrospective: optional
+
+  epic-2: backlog
+  2-1-log-in-and-log-out: backlog
+  2-2-slow-down-repeated-wrong-passwords: backlog
+  2-3-roles-are-enforced-on-every-protected-route: backlog
+  2-4-the-innlogging-page: backlog
+  2-5-session-lifetime-and-concurrent-sessions: backlog
+  2-6-prove-the-sign-in-flow-in-the-browser: backlog
+  epic-2-retrospective: optional
+
+  epic-3: backlog
+  3-1-list-and-read-resources: backlog
+  3-2-create-and-edit-resources: backlog
+  3-3-archive-a-resource-safely: backlog
+  3-4-browse-and-search-resources: backlog
+  3-5-resource-detail-page: backlog
+  3-6-resource-form-sheet: backlog
+  3-7-resource-administration-page: backlog
+  epic-3-retrospective: optional
+
+  epic-4: backlog
+  4-1-create-a-booking: backlog
+  4-2-guarantee-exclusivity-under-concurrency: backlog
+  4-3-read-bookings: backlog
+  4-4-the-schedule-read-model: backlog
+  4-5-s03-evidence-pack-daylight-saving-time-rules-and-the-early-s: backlog
+  4-6-slot-picker-and-roving-grid: backlog
+  4-7-booking-sheet: backlog
+  4-8-booking-detail-sheet: backlog
+  4-9-mine-bookinger: backlog
+  4-10-calendar-week-grid-and-blocks: backlog
+  4-11-calendar-block-interactions: backlog
+  4-12-calendar-keyboard-model-and-ledige-tider: backlog
+  4-13-mobile-week-strip-and-day-timeline: backlog
+  4-14-availability-strip-on-the-resource-page: backlog
+  4-15-s04-browser-evidence-flow-1-and-the-conflict-path: backlog
+  epic-4-retrospective: optional
+
+  epic-5: backlog
+  5-1-approve-or-reject-a-request: backlog
+  5-2-cancel-a-booking: backlog
+  5-3-the-godkjenninger-queue: backlog
+  5-4-booking-actions-cancel: backlog
+  5-5-s05-evidence-pack-transitions-races-and-roles: backlog
+  epic-5-retrospective: optional
+
+  epic-6: backlog
+  6-1-dashboard-figures: backlog
+  6-2-activity-log-api: backlog
+  6-3-hjem: backlog
+  6-4-activity-chart-with-a-text-alternative: backlog
+  6-5-aktivitet: backlog
+  epic-6-retrospective: optional
+
+  epic-7: backlog
+  7-1-sweep-every-route-and-permission: backlog
+  7-2-booking-lifecycle-in-the-browser: backlog
+  7-3-resources-dashboard-and-activity-in-the-browser: backlog
+  7-4-accessibility-and-responsiveness-verification: backlog
+  7-5-lookups-feel-responsive: backlog
+  7-6-readme-and-fresh-clone-start: backlog
+  7-7-macos-runtime-evidence-and-ci-parity: backlog
+  7-8-release-gate-and-the-evidence-pack: backlog
+  epic-7-retrospective: optional
