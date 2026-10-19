@@ -21,6 +21,11 @@ const TEMPORAL = {
   name: "temporal-polyfill",
   message: "Import temporal-polyfill only from platform/oslo-time.ts (AD-5).",
 };
+const NATIVE_DB = {
+  name: "better-sqlite3",
+  allowTypeImports: true,
+  message: "Only platform/db.ts imports better-sqlite3 (a value); use openDatabase() (AD-7).",
+};
 const webOnly = [
   { name: "react" },
   { name: "react-dom" },
@@ -150,6 +155,7 @@ export default tseslint.config(
           { name: "@felles/web", message: "The API never imports the web (AD-1)." },
           ...webOnly,
           TEMPORAL,
+          NATIVE_DB,
         ],
         [R.appsWeb],
       ),
@@ -160,7 +166,7 @@ export default tseslint.config(
     ignores: ["apps/api/src/platform/oslo-time.ts"],
     rules: {
       "no-restricted-imports": restrict(
-        [{ name: "@felles/web" }, ...webOnly, TEMPORAL],
+        [{ name: "@felles/web" }, ...webOnly, TEMPORAL, NATIVE_DB],
         [R.appsWeb, R.platformUp],
       ),
     },
@@ -169,7 +175,7 @@ export default tseslint.config(
     files: ["apps/api/src/platform/oslo-time.ts"],
     rules: {
       "no-restricted-imports": restrict(
-        [{ name: "@felles/web" }, ...webOnly],
+        [{ name: "@felles/web" }, ...webOnly, NATIVE_DB],
         [R.appsWeb, R.platformUp],
       ),
     },
@@ -178,7 +184,7 @@ export default tseslint.config(
     files: ["apps/api/src/modules/**/*.ts"],
     rules: {
       "no-restricted-imports": restrict(
-        [{ name: "@felles/web" }, ...webOnly, TEMPORAL],
+        [{ name: "@felles/web" }, ...webOnly, TEMPORAL, NATIVE_DB],
         [R.appsWeb, R.moduleInternals],
       ),
     },
@@ -187,7 +193,7 @@ export default tseslint.config(
     files: ["apps/api/src/modules/activity/**/*.ts"],
     rules: {
       "no-restricted-imports": restrict(
-        [{ name: "@felles/web" }, ...webOnly, TEMPORAL],
+        [{ name: "@felles/web" }, ...webOnly, TEMPORAL, NATIVE_DB],
         [R.appsWeb, R.moduleInternals, R.activityToBookings],
       ),
     },
@@ -206,6 +212,20 @@ export default tseslint.config(
         [R.appsWeb, R.moduleInternals],
       ),
     },
+  },
+  {
+    files: ["apps/api/src/platform/db.ts"],
+    rules: {
+      "no-restricted-imports": restrict(
+        [{ name: "@felles/web" }, ...webOnly, TEMPORAL],
+        [R.appsWeb, R.platformUp],
+      ),
+    },
+  },
+  {
+    files: ["apps/api/test/**/*.ts", "apps/api/db/**/*.ts", "scripts/**/*.mjs"],
+    ignores: ["scripts/eslint-plugin-felles.mjs"],
+    rules: { "no-restricted-imports": restrict([NATIVE_DB]) },
   },
   {
     files: ["apps/web/src/**/*.{ts,tsx}"],

@@ -270,4 +270,20 @@ export const cases = [
     bad: "export const H = ({ x }: { x: string }) => <div dangerouslySetInnerHTML={{ __html: x }} />;\n",
     good: "export const H = ({ x }: { x: string }) => <div>{x}</div>;\n",
   },
+  {
+    name: "better-sqlite3 imported outside platform/db.ts (openDatabase is the only constructor)",
+    rule: "no-restricted-imports",
+    file: "apps/api/src/modules/resources/resources.repository.ts",
+    bad: 'import Database from "better-sqlite3";\nexport const d = Database;\n',
+    good: 'import type { Database } from "better-sqlite3";\nexport type D = Database;\n',
+    twinFile: "apps/api/src/platform/db.ts",
+    twin: 'import Database from "better-sqlite3";\nexport const d = Database;\n',
+  },
+  {
+    name: "better-sqlite3 imported by a test helper",
+    rule: "no-restricted-imports",
+    file: "apps/api/test/second-connection.ts",
+    bad: 'import Database from "better-sqlite3";\nexport const d = Database;\n',
+    good: 'import { openDatabase } from "../src/platform/db";\nexport const d = openDatabase;\n',
+  },
 ];
