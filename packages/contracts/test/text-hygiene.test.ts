@@ -191,4 +191,27 @@ describe("every string field of every request schema", () => {
       }
     }
   });
+
+  it('[RES-03] an empty resource name reads "Navn er påkrevd." and other required fields "Må fylles ut." (@1.4)', () => {
+    const empty = createResourceInputSchema.safeParse({ ...resourceSample, name: "  " });
+    const errors = toFieldErrors((empty.error?.issues ?? []) as never);
+    expect(errors).toContainEqual({ path: "name", code: "REQUIRED", message: "Navn er påkrevd." });
+    const missing = createResourceInputSchema.safeParse({ kind: "room" });
+    const missingErrors = toFieldErrors((missing.error?.issues ?? []) as never);
+    expect(missingErrors).toContainEqual({
+      path: "name",
+      code: "REQUIRED",
+      message: "Navn er påkrevd.",
+    });
+    expect(missingErrors).toContainEqual({
+      path: "location",
+      code: "REQUIRED",
+      message: "Må fylles ut.",
+    });
+    const purpose = toFieldErrors(
+      (createBookingInputSchema.safeParse({ ...SAMPLE_CREATE_BOOKING, purpose: "" }).error
+        ?.issues ?? []) as never,
+    );
+    expect(purpose).toContainEqual({ path: "purpose", code: "REQUIRED", message: "Må fylles ut." });
+  });
 });

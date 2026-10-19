@@ -104,7 +104,7 @@ describe("error catalogue", () => {
     expect(result.success ? "" : result.error.issues[0]?.message).toBe("Maks 200 tegn.");
     expect(fieldMessageNb("TOO_LONG")).toBe("Maks 4 timer.");
     const missing = z
-      .object({ name: z.string() })
+      .object({ purpose: z.string() })
       .safeParse({}, { error: (issue) => catalogueErrorMap(issue) });
     expect(missing.success ? "" : missing.error.issues[0]?.message).toBe("Må fylles ut.");
   });

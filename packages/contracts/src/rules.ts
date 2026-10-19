@@ -109,7 +109,10 @@ export function canApprove(status: BookingStatus, startMs: number, nowMs: number
 
 // ---- 30-day horizon and 7-day window (AD-5, DEC-04, DEC-09) ----
 
-/** Create, cancel and approve need `start > now`. */
+/**
+ * Create, cancel and approve need `start > now`. Jo approved this strict reading at Gate S00-CP (2026-10-19) as an
+ * intentional deviation from PRD DEC-08, whose default is `start >= now`; `isExpired` (`start <= now`) is its complement.
+ */
 export function isInFuture(startMs: number, nowMs: number): boolean {
   return startMs > nowMs;
 }

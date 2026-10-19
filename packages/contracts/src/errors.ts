@@ -164,6 +164,16 @@ export function fieldMessageNb(code: FieldErrorCode, limit?: number): string {
   }
 }
 
+/**
+ * Wording fixed by EXPERIENCE.md for a required field wins over the generic text: an empty resource name
+ * reads "Navn er påkrevd." (RES-03). Every other required field reads "Må fylles ut.".
+ */
+const REQUIRED_BY_FIELD: Record<string, string> = { name: "Navn er påkrevd." };
+
+export function requiredMessageNb(path: string): string {
+  return REQUIRED_BY_FIELD[path] ?? fieldMessageNb("REQUIRED");
+}
+
 export function bookingTimeViolationMessage(code: BookingTimeViolation): string {
   return fieldMessageNb(code);
 }
@@ -217,6 +227,7 @@ export const TRIGGER_MESSAGES = [
 
 type IssueLike = {
   code: string;
+  path?: ReadonlyArray<PropertyKey>;
   input?: unknown;
   origin?: string;
   maximum?: number | bigint;
@@ -229,10 +240,10 @@ export function catalogueErrorMap(issue: IssueLike): string | undefined {
     return fieldMessageNb("TOO_LONG_TEXT", Number(issue.maximum));
   }
   if (issue.code === "too_small" && issue.origin === "string") {
-    return fieldMessageNb("REQUIRED");
+    return requiredMessageNb(String(issue.path?.[issue.path.length - 1] ?? ""));
   }
   if (issue.code === "invalid_type" && issue.input === undefined) {
-    return fieldMessageNb("REQUIRED");
+    return requiredMessageNb(String(issue.path?.[issue.path.length - 1] ?? ""));
   }
   if (issue.code === "unrecognized_keys") {
     return messageFor("VALIDATION_FAILED");
@@ -268,10 +279,10 @@ export function toFieldErrors(issues: readonly ZodIssueLike[]): FieldError[] {
       message = fieldMessageNb(code, Number(issue.maximum));
     } else if (issue.code === "too_small" && issue.origin === "string") {
       code = "REQUIRED";
-      message = fieldMessageNb(code);
+      message = requiredMessageNb(String(issue.path[issue.path.length - 1] ?? ""));
     } else if (issue.code === "invalid_type") {
       code = "REQUIRED";
-      message = fieldMessageNb(code);
+      message = requiredMessageNb(String(issue.path[issue.path.length - 1] ?? ""));
     } else {
       message = fieldMessageNb("INVALID");
     }
