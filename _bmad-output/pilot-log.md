@@ -66,6 +66,20 @@ Conventions: *Human interventions* = messages or decisions from Jo. *Rework* = c
 
 ---
 
+## Phase A4 — Epics and stories (bmad-create-epics-and-stories) · 2026-10-19 (in progress)
+
+### Facts
+- **Start:** 16:05 (Europe/Oslo), after Jo connected the repository to `https://github.com/jobendik/felles` (both branches pushed: `main` `a85f769`, `planning/felles` `7978ac5`; secrets scan of 290 tracked files found nothing).
+- **Human intervention 1:** Jo's brief to start the workflow and to check an inconsistency raised by an independent review of the committed architecture (AD-20 / AD-26 / AD-27, phase-specific verification versus `verify:full --through S07` in the merge gate).
+- **Check result:** confirmed. AD-27 embeds `trace.mjs --through S07` in `verify:full`, AD-20 has the merge gate run `verify:full`, AD-26 says the gate passes the candidate's slice. Read literally the gate would refuse every merge before S07, and CI would be red on every early commit. A second defect in the same text: "at or before `<slice>`" is a numeric order although S01/S02 and S04/S05/S06 are parallel; a third: no home for "accepted slices" because `ownership.json` is frozen. Proposal `AMENDMENT-1-proposal.md` (accepted-evidence tracing by `sNN-accepted` tags, `verify:release` for the S07 run) written; architecture unchanged until Jo approves.
+- **Workflow state:** skill activated and step 1 read; no `epics.md` created, no epics or stories derived. Waiting for Jo on Amendment 1 and on the input-document list.
+- **Observation about the installed skill:** step 1 searches `{planning_artifacts}/*prd*.md` and `*architecture*.md`; the artifacts produced by `bmad-prd` and `bmad-architecture` live in subfolders (`prds/prd-*/prd.md`, `architecture/architecture-*/ARCHITECTURE-SPINE.md`), so the documented patterns match neither. The bmad-ux pair is found. `_bmad-output/implementation-artifacts/` does not exist yet.
+
+### Interpretations
+- The defect survived my own consistency pass and the 8-lens review because each AD read correctly alone; it only appears when three ADs are composed into one gate. An independent reader found it in minutes, which supports keeping an independent review at the end of each phase.
+
+---
+
 ## Next phase
 
 Architecture is final and committed. Next: `bmad-create-epics-and-stories` (BMad catalog: architecture is followed by epics and stories). `bmad-spec` is the skill's optional adoption step and is not required for this pilot. OQ-1…OQ-5 stay deferred; OQ-6 is closed by this phase. Before S00: Jo installs Node 24 LTS.
