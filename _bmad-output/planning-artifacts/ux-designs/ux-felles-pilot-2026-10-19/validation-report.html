@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UX Design Validation: FELLES</title>
+<style>
+  :root { --bg:#fafaf9; --surface:#ffffff; --border:#e7e5e4; --text:#1c1917; --muted:#78716c; --verdict-strong:#16a34a; --verdict-adequate:#65a30d; --verdict-thin:#d97706; --verdict-broken:#dc2626; --sev-low:#64748b; --sev-medium:#ca8a04; --sev-high:#ea580c; --sev-critical:#dc2626; }
+  * { box-sizing:border-box; } html, body { margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,system-ui,sans-serif; background:var(--bg); color:var(--text); line-height:1.6; font-size:15px; }
+  .container { max-width:960px; margin:0 auto; padding:32px 24px 64px; }
+  header.report-header { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; padding-bottom:16px; border-bottom:1px solid var(--border); margin-bottom:24px; }
+  .title h1 { margin:0; font-size:22px; font-weight:600; letter-spacing:-0.01em; }
+  .title .subtitle { color:var(--muted); font-size:13px; margin-top:4px; font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+  .synthesis { background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--muted); border-radius:8px; padding:18px 22px; margin-bottom:24px; font-size:15.5px; }
+  .synthesis p { margin:0 0 10px; } .synthesis p:last-child { margin-bottom:0; }
+  .dimension-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:10px; margin-bottom:24px; }
+  .dim-card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 14px; }
+  .dim-card .dim-name { font-size:13px; color:var(--muted); margin-bottom:6px; } .dim-card .dim-verdict { font-size:14px; font-weight:600; }
+  section.dimension, section.reviewer-section { margin-bottom:14px; }
+  section.dimension details, section.reviewer-section details { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; }
+  section summary { padding:14px 20px; cursor:pointer; user-select:none; list-style:none; display:flex; align-items:center; gap:12px; }
+  section summary::-webkit-details-marker { display:none; }
+  section summary::before { content:"▸"; display:inline-block; color:var(--muted); transition:transform .15s ease; }
+  section details[open] summary::before { transform:rotate(90deg); }
+  section summary h2 { display:inline; margin:0; font-size:16px; font-weight:600; letter-spacing:-0.005em; flex:1; }
+  .verdict-pill { font-size:11px; padding:3px 10px; border-radius:999px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:white; }
+  .verdict-strong { background:var(--verdict-strong); } .verdict-adequate { background:var(--verdict-adequate); } .verdict-thin { background:var(--verdict-thin); } .verdict-broken { background:var(--verdict-broken); }
+  .dim-body { padding:4px 20px 18px; } .dim-judgment { color:var(--text); font-size:14.5px; } .dim-judgment p { margin:0 0 10px; }
+  .findings-list { padding:0 20px 4px; }
+  article.finding { padding:14px 0; border-top:1px solid var(--border); } article.finding:first-child { border-top:none; }
+  article.finding header { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:6px; }
+  .badge { font-size:10.5px; padding:3px 8px; border-radius:4px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; line-height:1.4; }
+  .badge-sev-low { background:rgba(100,116,139,.12); color:var(--sev-low); } .badge-sev-medium { background:rgba(202,138,4,.14); color:var(--sev-medium); } .badge-sev-high { background:rgba(234,88,12,.14); color:var(--sev-high); } .badge-sev-critical { background:rgba(220,38,38,.14); color:var(--sev-critical); }
+  .finding-title { margin:0; font-size:15px; font-weight:500; flex:1; min-width:200px; }
+  .finding-location { font-family:ui-monospace,"SF Mono",Menlo,monospace; font-size:12.5px; color:var(--muted); }
+  .finding-note, .finding-fix { margin-top:6px; font-size:14px; } .finding-fix strong { color:var(--muted); font-weight:500; }
+  .resolved { color:#15803d; }
+  .reviewer-source { font-size:12px; color:var(--muted); font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+  .mechanical { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:16px 20px; margin-top:24px; font-size:14px; }
+  .mechanical h3 { margin:0 0 10px; font-size:14px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:.04em; }
+  .mechanical ul { margin:0; padding-left:20px; } .mechanical li { margin-bottom:4px; }
+  footer.report-footer { margin-top:40px; padding-top:16px; border-top:1px solid var(--border); font-size:12px; color:var(--muted); font-family:ui-monospace,"SF Mono",Menlo,monospace; }
+  footer .meta { display:flex; gap:24px; flex-wrap:wrap; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="report-header">
+      <div class="title">
+        <h1>FELLES — UX Design Validation Report</h1>
+        <div class="subtitle">_bmad-output/planning-artifacts/ux-designs/ux-felles-pilot-2026-10-19/ · DESIGN.md + EXPERIENCE.md</div>
+      </div>
+    </header>
+
+    <div class="synthesis">
+      <p><strong>Rubric walker.</strong> A usable contract, not yet strong at review time. Every <code>{path}</code> reference resolved, all four UJs and the E2E-implied flows had a protagonist, steps, climax and failure path, the glossary matched the sources, and no UX decision altered an approved requirement (Part A and CR-1…CR-4 honoured). What held it back were load-bearing decisions left to the implementer: the Booking detail sheet had no anatomy or states, the booking date control was never named, and the slot picker rules could not express a 30-minute booking.</p>
+      <p><strong>Accessibility lens.</strong> Close to AA-safe but not there at review time. Every colour pair the spine specified passed (text 4.58–17.27:1, control boundaries 3.27–3.73:1, toast icons 10.96 and 8.52:1); status was never colour-only; overlays trapped and returned focus. The failures were in pairs the spine never checked (the link inside the dark toast at 2.70:1) and in behaviour left open on the core booking path (focus dropped by <code>disabled</code> in-flight buttons, no accessible date selection, an under-specified week-grid keyboard model).</p>
+      <p><strong>After the fix pass (2026-10-19).</strong> Every high and medium finding below is marked with how it was resolved in the spines. One item stays open by design: the mobile reading of VIS-01 (week strip + day timeline) needs Jo's explicit decision.</p>
+    </div>
+
+    <div class="dimension-summary">
+      <div class="dim-card"><div class="dim-name">Flow coverage</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div>
+      <div class="dim-card"><div class="dim-name">Token completeness</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div>
+      <div class="dim-card"><div class="dim-name">Component coverage</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div>
+      <div class="dim-card"><div class="dim-name">State coverage</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div>
+      <div class="dim-card"><div class="dim-name">Visual reference coverage</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div>
+      <div class="dim-card"><div class="dim-name">Bloat &amp; overspecification</div><div class="dim-verdict" style="color:var(--verdict-adequate)">adequate</div></div>
+      <div class="dim-card"><div class="dim-name">Inheritance discipline</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div>
+      <div class="dim-card"><div class="dim-name">Shape fit</div><div class="dim-verdict" style="color:var(--verdict-strong)">strong</div></div>
+    </div>
+
+    <section class="dimension"><details><summary><h2>1. Flow coverage</h2><span class="verdict-pill verdict-adequate">adequate</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>UJ-1…UJ-4 and the E2E-implied flows all present with protagonist, numbered steps, climax and failure path. Two gaps: no sign-in flow, and Flow 1 never used the calendar entry point UJ-1 describes.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">No login, session-expiry or logout flow</h3><span class="finding-location">EXPERIENCE.md § Key Flows</span></header><div class="finding-fix"><strong>Fix:</strong> add a short sign-in flow with failure and expiry variants. <span class="resolved">Resolved: Flow 0 added.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Flow 1 never touches Kalender despite UJ-1 wording</h3><span class="finding-location">EXPERIENCE.md § Flow 1</span></header><div class="finding-fix"><strong>Fix:</strong> add a from-the-calendar variant. <span class="resolved">Resolved.</span></div></article>
+      </div></details></section>
+
+    <section class="dimension"><details><summary><h2>2. Token completeness</h2><span class="verdict-pill verdict-adequate">adequate</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>All 37 references resolved. Three hex literals lived only in prose; several type sizes sat outside the ramp and contradicted the 13px rule.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Hex values without tokens (#FAFBFF, #7EE2A8, #FF9B93)</h3><span class="finding-location">DESIGN.md § Components → Calendar, Toast</span></header><div class="finding-fix"><strong>Fix:</strong> tokenise. <span class="resolved">Resolved: surface-today, success-on-dark, danger-on-dark (+ link-on-dark, focus-ring-on-dark).</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Type sizes outside the typography ramp</h3><span class="finding-location">DESIGN.md § Components → Tab bar, Avatar, Week strip, Calendar, Top bar</span></header><div class="finding-fix"><strong>Fix:</strong> add roles or map to existing ones; amend the 13px rule. <span class="resolved">Resolved: tab-label, caption-strong, numeral, numeral-sm added; top bar → h2; rule names its exceptions.</span></div></article>
+      </div></details></section>
+
+    <section class="dimension"><details open><summary><h2>3. Component coverage</h2><span class="verdict-pill verdict-adequate">adequate</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>Most components had both a visual and a behavioural spec. The two load-bearing omissions were the Booking detail sheet and the date control; Popover, Tooltip and the Arkivert badge were used but unspecified.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">Booking detail sheet unspecified</h3><span class="finding-location">EXPERIENCE.md § IA overlays, Flows 4–5</span></header><div class="finding-note">Target of row taps, block clicks, toast and activity links; where rejection and admin-cancel reasons are read; no anatomy, behaviour or states.</div><div class="finding-fix"><strong>Fix:</strong> Component Patterns row, State Patterns row, DESIGN.md Sheet sub-bullet. <span class="resolved">Resolved in both spines, with mock pointer and ?booking= URL rule.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">Date control in the Booking sheet never named</h3><span class="finding-location">EXPERIENCE.md § Flows 1–2, Slot picker</span></header><div class="finding-fix"><strong>Fix:</strong> Date field with the BOK-02 window. <span class="resolved">Resolved: native date input, min today / max +30 d, nb-NO caption, picker reload rule.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Popover and Tooltip used but unspecified</h3><span class="finding-location">EXPERIENCE.md § Calendar; DESIGN.md § Components</span></header><div class="finding-fix"><strong>Fix:</strong> add both. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">"Arkivert" badge missing from Badge spec</h3><span class="finding-location">DESIGN.md § Components → Badge</span></header><div class="finding-fix"><strong>Fix:</strong> archived variant. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Availability strip lacked an own-booking state</h3><span class="finding-location">DESIGN.md § Availability strip; Flow 1 climax</span></header><div class="finding-fix"><strong>Fix:</strong> add "own" segment. <span class="resolved">Resolved ("Din booking").</span></div></article>
+      </div></details></section>
+
+    <section class="dimension"><details><summary><h2>4. State coverage</h2><span class="verdict-pill verdict-adequate">adequate</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>Routes strong; overlays thin at review time. The slot picker could not express the 30-minute minimum, and two rules on client-side disabling contradicted each other.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">Booking detail sheet had no state row</h3><span class="finding-location">EXPERIENCE.md § State Patterns</span></header><div class="finding-fix"><strong>Fix:</strong> see §3. <span class="resolved">Resolved: loading, 404, 403, stale-status.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Slot picker cannot express a 30-minute booking</h3><span class="finding-location">EXPERIENCE.md § Slot picker</span></header><div class="finding-fix"><strong>Fix:</strong> inclusive-end semantics. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Client-side disabling contradiction</h3><span class="finding-location">EXPERIENCE.md § Interaction Primitives → Forms vs Reason dialog</span></header><div class="finding-fix"><strong>Fix:</strong> state the exception. <span class="resolved">Resolved.</span></div></article>
+      </div></details></section>
+
+    <section class="dimension"><details><summary><h2>5. Visual reference coverage</h2><span class="verdict-pill verdict-strong">strong</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>All eight mocks linked inline where they illustrate a decision; spines-win-on-conflict stated once; no orphans.</p></div></div></details></section>
+
+    <section class="dimension"><details><summary><h2>6. Bloat &amp; overspecification</h2><span class="verdict-pill verdict-adequate">adequate</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>EXPERIENCE.md tight. DESIGN.md Components was pixel-dense in places that bypassed the token layer.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Pixel specs where component tokens should carry them</h3><span class="finding-location">DESIGN.md § Components</span></header><div class="finding-fix"><strong>Fix:</strong> move sizes into <code>components</code> frontmatter. <span class="resolved">Resolved in part: calendar, switch, segmented, popover, tooltip tokens added; anatomy pixels kept deliberately for a custom component set.</span></div></article>
+      </div></details></section>
+
+    <section class="dimension"><details><summary><h2>7. Inheritance discipline</h2><span class="verdict-pill verdict-strong">strong</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>No requirement changed; sources resolve; glossary identical. Two internal contradictions and one reading of VIS-01 that needs a recorded decision.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Mobile dialog: full-screen vs centred card</h3><span class="finding-location">DESIGN.md § Dialog vs EXPERIENCE.md § Responsive</span></header><div class="finding-fix"><strong>Fix:</strong> one rule. <span class="resolved">Resolved: dialogs centred at every width; only sheets go full-screen.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">VIS-01 "ukevisning" at 375 px rendered as week strip + day timeline</h3><span class="finding-location">EXPERIENCE.md § Open Question 2</span></header><div class="finding-fix"><strong>Fix:</strong> obtain Jo's explicit yes; record as a decision. <strong>Open</strong> — fallback (7-column grid with bar-only blocks) written into the question.</div></article>
+      </div></details></section>
+
+    <section class="dimension"><details><summary><h2>8. Shape fit</h2><span class="verdict-pill verdict-strong">strong</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>Canonical order and all required sections present; Open Questions earns its place for the approval review and should dissolve into memlog decisions at final.</p></div></div></details></section>
+
+    <section class="reviewer-section"><details open><summary><h2>Accessibility review (WCAG 2.2 AA)</h2><span class="reviewer-source">review-accessibility.md</span></summary>
+      <div class="dim-body"><div class="dim-judgment"><p>Every specified colour pair passed; status never colour-only; overlays trap and return focus; both grids declared a linear alternative. Three defects would have failed an audit on the core booking path; all are resolved. Mediums clustered around colour-only chrome states, target sizes on mobile, naming, and the week-grid keyboard model.</p></div></div>
+      <div class="findings-list">
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">In-flight <code>disabled</code> buttons drop focus on every server error</h3><span class="finding-location">EXPERIENCE.md § Button · WCAG 2.4.3, 4.1.3</span></header><div class="finding-fix"><strong>Fix:</strong> aria-disabled; focus to the inline alert. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">No accessible date selection in the Booking sheet</h3><span class="finding-location">EXPERIENCE.md § Flow 2 · WCAG 1.3.1, 2.1.1, 3.3.2</span></header><div class="finding-fix"><strong>Fix:</strong> Date field. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-high">high</span><h3 class="finding-title">Toast link and focus ring at 2.70:1 on the dark toast</h3><span class="finding-location">DESIGN.md § Toast, Focus ring · WCAG 1.4.3, 1.4.11, 2.4.7</span></header><div class="finding-fix"><strong>Fix:</strong> on-dark tokens. <span class="resolved">Resolved; actionable toasts also persist with a "Lukk" button (2.2.1).</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Active navigation colour-only (sidebar 1.16:1 fill, tab bar 1.04:1)</h3><span class="finding-location">DESIGN.md § Sidebar, Tab bar · WCAG 1.4.1, 1.4.11</span></header><div class="finding-fix"><strong>Fix:</strong> bar + weight. <span class="resolved">Resolved; mocks patched.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Week-grid keyboard model under-specified; popover and "Ledige tider" undefined</h3><span class="finding-location">EXPERIENCE.md § Calendar · WCAG 2.1.1, 4.1.2</span></header><div class="finding-fix"><strong>Fix:</strong> ARIA grid model, cell names, popover behaviour, list content. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">32 px targets on mobile, 32 px close button, 28 px swatches</h3><span class="finding-location">mocks; DESIGN.md § Symbol/Colour picker · WCAG 2.5.8</span></header><div class="finding-fix"><strong>Fix:</strong> 40 px below 1024 px. <span class="resolved">Resolved in spines; mocks still show 32 px row actions on mobile and are marked as illustrations.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Symbol picker names are English Lucide ids</h3><span class="finding-location">DESIGN.md § Icons · WCAG 3.1.2, 2.4.6</span></header><div class="finding-fix"><strong>Fix:</strong> Norwegian names. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Abbreviations in accessible names and live regions</h3><span class="finding-location">EXPERIENCE.md § Voice and Tone · WCAG 1.3.1, 4.1.2</span></header><div class="finding-fix"><strong>Fix:</strong> whole words for assistive tech. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Slot picker: hairline boundary, fill-only range, aria-pressed on gridcells</h3><span class="finding-location">DESIGN.md § Slot picker · WCAG 1.4.11, 4.1.2</span></header><div class="finding-fix"><strong>Fix:</strong> border-strong, range border, gridcell buttons with roving tabindex. <span class="resolved">Resolved; mocks patched.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Counter vs <code>maxlength</code>; over-limit colour-only</h3><span class="finding-location">EXPERIENCE.md § Input · WCAG 3.3.1, 1.4.1</span></header><div class="finding-fix"><strong>Fix:</strong> no maxlength, polite announcements, standard error. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Focus obscured by sticky bars</h3><span class="finding-location">EXPERIENCE.md § Accessibility Floor · WCAG 2.4.11</span></header><div class="finding-fix"><strong>Fix:</strong> scroll-padding. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">"Mer" is a link that opens a sheet; count dot unnamed</h3><span class="finding-location">EXPERIENCE.md § IA · WCAG 4.1.2</span></header><div class="finding-fix"><strong>Fix:</strong> button with aria-haspopup; named dot. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Required-field convention undefined</h3><span class="finding-location">EXPERIENCE.md § Accessibility Floor → Forms · WCAG 3.3.2</span></header><div class="finding-fix"><strong>Fix:</strong> "(valgfritt)" on optional fields; aria-required elsewhere. <span class="resolved">Resolved.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Fill-only extents: calendar blocks and segmented control</h3><span class="finding-location">DESIGN.md § Calendar block, Segmented control · WCAG 1.4.11</span></header><div class="finding-fix"><strong>Fix:</strong> outlines. <span class="resolved">Resolved; mocks patched.</span></div></article>
+        <article class="finding"><header><span class="badge badge-sev-medium">medium</span><h3 class="finding-title">Actionable toasts auto-dismiss in 4 s</h3><span class="finding-location">EXPERIENCE.md § Toast · WCAG 2.2.1</span></header><div class="finding-fix"><strong>Fix:</strong> persist until dismissed. <span class="resolved">Resolved.</span></div></article>
+      </div></details></section>
+
+    <div class="mechanical">
+      <h3>Mechanical notes</h3>
+      <ul>
+        <li>All mockup links resolve; no <code>.working/</code> or <code>imports/</code> links in the spines.</li>
+        <li>37 <code>{path}</code> references resolve. The <code>{side}</code> placeholder in the document-title rule was replaced with prose.</li>
+        <li><code>letterSpacing</code> values are now quoted in the YAML frontmatter.</li>
+        <li>Name consistency applied: "Hjem" for the start page, "Week strip", "List row".</li>
+        <li>Mermaid blocks (flowchart LR, stateDiagram-v2) parse; "utløpt" correctly omitted as a stored state.</li>
+        <li>Memlog line 16 keeps the pre-change <code>ink-muted</code> value as history; the change is recorded later in the log.</li>
+      </ul>
+    </div>
+
+    <footer class="report-footer">
+      <div class="meta">
+        <span>Rubric: review-rubric.md</span>
+        <span>Accessibility: review-accessibility.md</span>
+        <span>Editorial: review-editorial.md</span>
+        <span>Generated: 2026-10-19T10:40+02:00</span>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

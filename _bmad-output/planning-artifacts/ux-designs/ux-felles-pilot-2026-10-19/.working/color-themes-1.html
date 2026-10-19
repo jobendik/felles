@@ -1,0 +1,171 @@
+<!doctype html><html lang="nb"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>FELLES – fargetemaer</title>
+<style>
+:root{--f:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:#E4E7EC;color:#171B22;font:15px/22px var(--f);padding:24px 16px}
+h1{font:600 24px/32px var(--f);margin:0 0 4px}.intro{color:#4A5261;margin:0 0 20px;max-width:70ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:20px;max-width:1240px;margin:0 auto}
+.wrap{max-width:1240px;margin:0 auto 16px}
+.th{background:var(--sb);color:var(--ip);border:1px solid var(--bd);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:16px}
+.th-h h2{margin:0;font:600 20px/28px var(--f);display:flex;gap:8px;align-items:center;flex-wrap:wrap}.th-h p{margin:2px 0 0;color:var(--is)}
+.rec{background:var(--pr);color:#fff;font:600 12px/20px var(--f);padding:0 10px;border-radius:9999px}
+.chips{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px}
+.chip{border:1px solid rgba(0,0,0,.15);border-radius:8px;padding:6px 8px;display:flex;flex-direction:column;font:11px/14px var(--f)}.chip b{font:600 12px/16px ui-monospace,Consolas,monospace}
+.snip{border:1px solid var(--bd);border-radius:12px;overflow:hidden;background:var(--sb)}
+.chrome{background:#121A2B;display:flex;gap:14px;align-items:center;padding:0 14px;height:44px;color:#C9D1E3;font:500 13px/16px var(--f)}
+.chrome .wm{color:#fff;font-weight:700;letter-spacing:.08em;margin-right:8px}.chrome .cur{color:#fff;background:#24304A;padding:6px 10px;border-radius:6px}.chrome i{font-style:normal;background:#FFD58A;color:#4A2900;border-radius:9px;padding:0 6px;margin-left:4px;font-size:11px}
+.snb{padding:16px}
+.qc{background:var(--sr);border:1px solid var(--bd);border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.qh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}.qh h3{margin:0;font:600 16px/24px var(--f)}
+.row{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid var(--bd)}.qh+.row{border-top:0}.rb{flex:1;min-width:0;display:flex;flex-direction:column}.rb strong{font-weight:500}.rb span{font-size:13px;line-height:18px;color:var(--is)}
+.badge{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:9999px;font:500 12px/16px var(--f);white-space:nowrap}.badge::before{content:"";width:8px;height:8px;border-radius:50%;background:currentColor}
+.b-c{background:var(--sus);color:var(--osus)}.b-p{background:var(--was);color:var(--owas)}.b-r{background:var(--das);color:var(--odas)}.b-n{background:var(--ns);color:var(--ons)}.b-x{background:var(--sr);color:var(--owas);border:1px dashed var(--wa)}
+.fld{margin-top:12px;display:flex;flex-direction:column;gap:6px}.fld label{font:500 13px/16px var(--f)}
+.in{height:40px;border:1px solid var(--bs);border-radius:8px;background:var(--sr);padding:0 12px;display:flex;align-items:center}.in.focus{outline:2px solid var(--fr);outline-offset:0;border-color:var(--pr)}
+.err{font-size:13px;line-height:18px;color:var(--da)}
+.btns{display:flex;gap:8px;margin-top:12px}.btns button{height:40px;padding:0 16px;border-radius:8px;font:500 15px var(--f);cursor:default}
+.bp{background:var(--pr);color:#fff;border:1px solid transparent}.bs2{background:var(--sr);color:var(--ip);border:1px solid var(--bs)}
+.recent{margin-top:14px;display:flex;flex-direction:column;gap:6px;font:500 12px/16px var(--f);color:var(--is)}.bl{display:flex;gap:6px;flex-wrap:wrap}
+.calh{margin:14px 0 6px;font:500 12px/16px var(--f);color:var(--is)}
+.cal{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;background:var(--ss);border-radius:8px;padding:6px}
+.blk{border-radius:6px;padding:4px 8px;font:600 12px/16px var(--f);border-left:3px solid;display:flex;flex-direction:column}.blk small{font-weight:400;font-size:12px}
+.own{background:var(--ps);color:var(--ops);border-color:var(--pr)}.pend{background:var(--was);color:var(--owas);border-color:var(--wa);border-left-style:dashed}.oth{background:var(--ns);color:var(--ons);border-color:var(--bs)}
+.v1{--sb:#F5F7FA;--sr:#FFFFFF;--ss:#EDF0F4;--ip:#171B22;--is:#596273;--bd:#DCE1E8;--bs:#7B8594;--pr:#2452D9;--ph:#1E46BD;--ps:#E9EEFC;--ops:#1A3FA8;--su:#1D7A46;--sus:#E2F4E8;--osus:#135C34;--wa:#9A5600;--was:#FFF0D4;--owas:#7A4300;--da:#B3261E;--das:#FCE8E6;--odas:#8C1D16;--ns:#EDF0F4;--ons:#4A5261;--fr:#2452D9}
+.v2{--sb:#F2F4F6;--sr:#FFFFFF;--ss:#E9ECEF;--ip:#1B222B;--is:#4F5967;--bd:#D6DBE1;--bs:#6F7987;--pr:#0F6E6A;--ph:#0B5A57;--ps:#E0F1F0;--ops:#0B4F4C;--su:#217A4B;--sus:#E3F3EA;--osus:#14593A;--wa:#935200;--was:#FDEFD6;--owas:#744000;--da:#B3261E;--das:#FBE9E7;--odas:#8C1D16;--ns:#E9ECEF;--ons:#3F4855;--fr:#0F6E6A}
+.v3{--sb:#F8F7F3;--sr:#FFFFFF;--ss:#EFEDE6;--ip:#22201B;--is:#5A564D;--bd:#E0DCD0;--bs:#7E786B;--pr:#1B5E3F;--ph:#154B33;--ps:#E4F0E8;--ops:#164D33;--su:#2E7D3E;--sus:#E6F2E3;--osus:#1D5A28;--wa:#9A5600;--was:#FFF0D2;--owas:#774100;--da:#B0291C;--das:#FBE9E4;--odas:#8A2016;--ns:#EFEDE6;--ons:#4C483F;--fr:#1B5E3F}
+.v4{--sb:#F1F3F8;--sr:#FFFFFF;--ss:#E7EAF1;--ip:#0F1522;--is:#4A5468;--bd:#D8DDE7;--bs:#6B7589;--pr:#1A56E8;--ph:#1445C4;--ps:#E6EDFE;--ops:#123BAE;--su:#1A7A45;--sus:#DFF3E7;--osus:#125832;--wa:#8F4F00;--was:#FFEFD1;--owas:#703D00;--da:#B3261E;--das:#FCE8E6;--odas:#8C1D16;--ns:#E7EAF1;--ons:#3E4859;--fr:#1A56E8}
+</style></head><body>
+<div class='wrap'><h1>FELLES – fargetemaer</h1><p class='intro'>Fire fargevarianter for samme grensesnitt: godkjenningskø, statusmerker, skjemafelt og kalenderblokker. Kun lys modus.</p></div>
+<div class='grid'>
+<section class="th v1" aria-label="Fjord">
+<header class="th-h"><h2>1 Fjord <span class="rec">Anbefalt</span></h2><p>Rolig, kjølig og presis. Appen holder seg i bakgrunnen og lar tidspunkt og status bære innholdet.</p></header>
+<ul class="chips"><li class="chip" style="background:#F5F7FA;color:#111"><span>surface-base</span><b>#F5F7FA</b></li><li class="chip" style="background:#FFFFFF;color:#111"><span>surface-raised</span><b>#FFFFFF</b></li><li class="chip" style="background:#EDF0F4;color:#111"><span>surface-sunken</span><b>#EDF0F4</b></li><li class="chip" style="background:#171B22;color:#fff"><span>ink-primary</span><b>#171B22</b></li><li class="chip" style="background:#596273;color:#fff"><span>ink-secondary</span><b>#596273</b></li><li class="chip" style="background:#DCE1E8;color:#111"><span>border</span><b>#DCE1E8</b></li><li class="chip" style="background:#7B8594;color:#fff"><span>border-strong</span><b>#7B8594</b></li><li class="chip" style="background:#2452D9;color:#fff"><span>primary</span><b>#2452D9</b></li><li class="chip" style="background:#1E46BD;color:#fff"><span>primary-hover</span><b>#1E46BD</b></li><li class="chip" style="background:#E9EEFC;color:#111"><span>primary-subtle</span><b>#E9EEFC</b></li><li class="chip" style="background:#1A3FA8;color:#fff"><span>on-primary-subtle</span><b>#1A3FA8</b></li><li class="chip" style="background:#1D7A46;color:#fff"><span>success</span><b>#1D7A46</b></li><li class="chip" style="background:#E2F4E8;color:#111"><span>success-subtle</span><b>#E2F4E8</b></li><li class="chip" style="background:#9A5600;color:#fff"><span>warning</span><b>#9A5600</b></li><li class="chip" style="background:#FFF0D4;color:#111"><span>warning-subtle</span><b>#FFF0D4</b></li><li class="chip" style="background:#B3261E;color:#fff"><span>danger</span><b>#B3261E</b></li><li class="chip" style="background:#FCE8E6;color:#111"><span>danger-subtle</span><b>#FCE8E6</b></li><li class="chip" style="background:#EDF0F4;color:#111"><span>neutral-subtle</span><b>#EDF0F4</b></li><li class="chip" style="background:#2452D9;color:#fff"><span>focus-ring</span><b>#2452D9</b></li></ul>
+<div class="snip"><div class="snb">
+<div class="qc"><div class="qh"><h3>Godkjenninger</h3><span class="badge b-p">3 venter</span></div>
+<div class="row"><div class="rb"><strong>Podkast-sett</strong><span>Ingrid Haugen · ons. 21. okt. 13:00–15:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården</strong><span>Jonas Dahl · tor. 22. okt. 09:00–12:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården, Morgenmøte</strong><span>Jonas Dahl · man. 19. okt. 08:00–09:00</span></div><span class="badge b-x">Utløpt</span></div>
+<div class="fld"><label>Begrunnelse</label><div class="in focus">Kameraet er på service</div><div class="err">Skriv en begrunnelse før du avslår.</div></div>
+<div class="btns"><button class="bp">Godkjenn</button><button class="bs2">Avslå</button></div>
+<div class="recent"><span>Nylig behandlet</span><div class="bl"><span class="badge b-c">Bekreftet</span><span class="badge b-r">Avslått</span><span class="badge b-n">Avbestilt</span></div></div>
+<div class="calh">Mandag 19. okt.</div>
+<div class="cal"><span class="blk own">Kundemøte Nordlys<small>10:00–11:00</small></span><span class="blk pend">Episode 12<small>Venter</small></span><span class="blk oth">Reservert<small>13:00–14:30</small></span></div>
+</div></div></div>
+<style>/* Fjord hex: base=#F5F7FA, raised=#FFFFFF, sunken=#EDF0F4, ink=#171B22, ink2=#596273, border=#DCE1E8, bstrong=#7B8594, primary=#2452D9, hover=#1E46BD, psub=#E9EEFC, onpsub=#1A3FA8, succ=#1D7A46, ssub=#E2F4E8, onssub=#135C34, warn=#9A5600, wsub=#FFF0D4, onwsub=#7A4300, dang=#B3261E, dsub=#FCE8E6, ondsub=#8C1D16, nsub=#EDF0F4, onnsub=#4A5261, focus=#2452D9
+   Kontrast (WCAG 2.x):
+   Brødtekst på surface-base: #171B22 on #F5F7FA = 16.09:1 (min 4.5) PASS
+   Sekundærtekst på surface-raised: #596273 on #FFFFFF = 6.14:1 (min 4.5) PASS
+   Sekundærtekst på surface-base: #596273 on #F5F7FA = 5.72:1 (min 4.5) PASS
+   Hvit på primary: #FFFFFF on #2452D9 = 6.39:1 (min 4.5) PASS
+   Hvit på primary-hover: #FFFFFF on #1E46BD = 7.88:1 (min 4.5) PASS
+   Primary på surface-raised: #2452D9 on #FFFFFF = 6.39:1 (min 4.5) PASS
+   on-primary-subtle på primary-subtle: #1A3FA8 on #E9EEFC = 7.80:1 (min 4.5) PASS
+   Bekreftet (on-success på success-subtle): #135C34 on #E2F4E8 = 7.03:1 (min 4.5) PASS
+   Venter (on-warning på warning-subtle): #7A4300 on #FFF0D4 = 7.10:1 (min 4.5) PASS
+   Avslått (on-danger på danger-subtle): #8C1D16 on #FCE8E6 = 7.74:1 (min 4.5) PASS
+   Avbestilt (on-neutral på neutral-subtle): #4A5261 on #EDF0F4 = 6.88:1 (min 4.5) PASS
+   Utløpt (on-warning på surface-raised): #7A4300 on #FFFFFF = 7.98:1 (min 4.5) PASS
+   Feiltekst danger på surface-raised: #B3261E on #FFFFFF = 6.54:1 (min 4.5) PASS
+   border-strong på surface-raised: #7B8594 on #FFFFFF = 3.73:1 (min 3.0) PASS
+   focus-ring på surface-raised: #2452D9 on #FFFFFF = 6.39:1 (min 3.0) PASS
+*/</style>
+</section>
+<section class="th v2" aria-label="Granitt">
+<header class="th-h"><h2>2 Granitt </h2><p>Fokusert og nøkternt. Et profesjonelt verktøy i grafitt, med én teal aksent for handlinger.</p></header>
+<ul class="chips"><li class="chip" style="background:#F2F4F6;color:#111"><span>surface-base</span><b>#F2F4F6</b></li><li class="chip" style="background:#FFFFFF;color:#111"><span>surface-raised</span><b>#FFFFFF</b></li><li class="chip" style="background:#E9ECEF;color:#111"><span>surface-sunken</span><b>#E9ECEF</b></li><li class="chip" style="background:#1B222B;color:#fff"><span>ink-primary</span><b>#1B222B</b></li><li class="chip" style="background:#4F5967;color:#fff"><span>ink-secondary</span><b>#4F5967</b></li><li class="chip" style="background:#D6DBE1;color:#111"><span>border</span><b>#D6DBE1</b></li><li class="chip" style="background:#6F7987;color:#fff"><span>border-strong</span><b>#6F7987</b></li><li class="chip" style="background:#0F6E6A;color:#fff"><span>primary</span><b>#0F6E6A</b></li><li class="chip" style="background:#0B5A57;color:#fff"><span>primary-hover</span><b>#0B5A57</b></li><li class="chip" style="background:#E0F1F0;color:#111"><span>primary-subtle</span><b>#E0F1F0</b></li><li class="chip" style="background:#0B4F4C;color:#fff"><span>on-primary-subtle</span><b>#0B4F4C</b></li><li class="chip" style="background:#217A4B;color:#fff"><span>success</span><b>#217A4B</b></li><li class="chip" style="background:#E3F3EA;color:#111"><span>success-subtle</span><b>#E3F3EA</b></li><li class="chip" style="background:#935200;color:#fff"><span>warning</span><b>#935200</b></li><li class="chip" style="background:#FDEFD6;color:#111"><span>warning-subtle</span><b>#FDEFD6</b></li><li class="chip" style="background:#B3261E;color:#fff"><span>danger</span><b>#B3261E</b></li><li class="chip" style="background:#FBE9E7;color:#111"><span>danger-subtle</span><b>#FBE9E7</b></li><li class="chip" style="background:#E9ECEF;color:#111"><span>neutral-subtle</span><b>#E9ECEF</b></li><li class="chip" style="background:#0F6E6A;color:#fff"><span>focus-ring</span><b>#0F6E6A</b></li></ul>
+<div class="snip"><div class="snb">
+<div class="qc"><div class="qh"><h3>Godkjenninger</h3><span class="badge b-p">3 venter</span></div>
+<div class="row"><div class="rb"><strong>Podkast-sett</strong><span>Ingrid Haugen · ons. 21. okt. 13:00–15:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården</strong><span>Jonas Dahl · tor. 22. okt. 09:00–12:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården, Morgenmøte</strong><span>Jonas Dahl · man. 19. okt. 08:00–09:00</span></div><span class="badge b-x">Utløpt</span></div>
+<div class="fld"><label>Begrunnelse</label><div class="in focus">Kameraet er på service</div><div class="err">Skriv en begrunnelse før du avslår.</div></div>
+<div class="btns"><button class="bp">Godkjenn</button><button class="bs2">Avslå</button></div>
+<div class="recent"><span>Nylig behandlet</span><div class="bl"><span class="badge b-c">Bekreftet</span><span class="badge b-r">Avslått</span><span class="badge b-n">Avbestilt</span></div></div>
+<div class="calh">Mandag 19. okt.</div>
+<div class="cal"><span class="blk own">Kundemøte Nordlys<small>10:00–11:00</small></span><span class="blk pend">Episode 12<small>Venter</small></span><span class="blk oth">Reservert<small>13:00–14:30</small></span></div>
+</div></div></div>
+<style>/* Granitt hex: base=#F2F4F6, raised=#FFFFFF, sunken=#E9ECEF, ink=#1B222B, ink2=#4F5967, border=#D6DBE1, bstrong=#6F7987, primary=#0F6E6A, hover=#0B5A57, psub=#E0F1F0, onpsub=#0B4F4C, succ=#217A4B, ssub=#E3F3EA, onssub=#14593A, warn=#935200, wsub=#FDEFD6, onwsub=#744000, dang=#B3261E, dsub=#FBE9E7, ondsub=#8C1D16, nsub=#E9ECEF, onnsub=#3F4855, focus=#0F6E6A
+   Kontrast (WCAG 2.x):
+   Brødtekst på surface-base: #1B222B on #F2F4F6 = 14.54:1 (min 4.5) PASS
+   Sekundærtekst på surface-raised: #4F5967 on #FFFFFF = 7.10:1 (min 4.5) PASS
+   Sekundærtekst på surface-base: #4F5967 on #F2F4F6 = 6.44:1 (min 4.5) PASS
+   Hvit på primary: #FFFFFF on #0F6E6A = 6.07:1 (min 4.5) PASS
+   Hvit på primary-hover: #FFFFFF on #0B5A57 = 8.03:1 (min 4.5) PASS
+   Primary på surface-raised: #0F6E6A on #FFFFFF = 6.07:1 (min 4.5) PASS
+   on-primary-subtle på primary-subtle: #0B4F4C on #E0F1F0 = 8.05:1 (min 4.5) PASS
+   Bekreftet (on-success på success-subtle): #14593A on #E3F3EA = 7.25:1 (min 4.5) PASS
+   Venter (on-warning på warning-subtle): #744000 on #FDEFD6 = 7.47:1 (min 4.5) PASS
+   Avslått (on-danger på danger-subtle): #8C1D16 on #FBE9E7 = 7.78:1 (min 4.5) PASS
+   Avbestilt (on-neutral på neutral-subtle): #3F4855 on #E9ECEF = 7.80:1 (min 4.5) PASS
+   Utløpt (on-warning på surface-raised): #744000 on #FFFFFF = 8.48:1 (min 4.5) PASS
+   Feiltekst danger på surface-raised: #B3261E on #FFFFFF = 6.54:1 (min 4.5) PASS
+   border-strong på surface-raised: #6F7987 on #FFFFFF = 4.41:1 (min 3.0) PASS
+   focus-ring på surface-raised: #0F6E6A on #FFFFFF = 6.07:1 (min 3.0) PASS
+*/</style>
+</section>
+<section class="th v3" aria-label="Furu">
+<header class="th-h"><h2>3 Furu </h2><p>Vennlig og organisk. Dyp skoggrønn på varme, lyse flater, som et godt vedlikeholdt fellesrom.</p></header>
+<ul class="chips"><li class="chip" style="background:#F8F7F3;color:#111"><span>surface-base</span><b>#F8F7F3</b></li><li class="chip" style="background:#FFFFFF;color:#111"><span>surface-raised</span><b>#FFFFFF</b></li><li class="chip" style="background:#EFEDE6;color:#111"><span>surface-sunken</span><b>#EFEDE6</b></li><li class="chip" style="background:#22201B;color:#fff"><span>ink-primary</span><b>#22201B</b></li><li class="chip" style="background:#5A564D;color:#fff"><span>ink-secondary</span><b>#5A564D</b></li><li class="chip" style="background:#E0DCD0;color:#111"><span>border</span><b>#E0DCD0</b></li><li class="chip" style="background:#7E786B;color:#fff"><span>border-strong</span><b>#7E786B</b></li><li class="chip" style="background:#1B5E3F;color:#fff"><span>primary</span><b>#1B5E3F</b></li><li class="chip" style="background:#154B33;color:#fff"><span>primary-hover</span><b>#154B33</b></li><li class="chip" style="background:#E4F0E8;color:#111"><span>primary-subtle</span><b>#E4F0E8</b></li><li class="chip" style="background:#164D33;color:#fff"><span>on-primary-subtle</span><b>#164D33</b></li><li class="chip" style="background:#2E7D3E;color:#fff"><span>success</span><b>#2E7D3E</b></li><li class="chip" style="background:#E6F2E3;color:#111"><span>success-subtle</span><b>#E6F2E3</b></li><li class="chip" style="background:#9A5600;color:#fff"><span>warning</span><b>#9A5600</b></li><li class="chip" style="background:#FFF0D2;color:#111"><span>warning-subtle</span><b>#FFF0D2</b></li><li class="chip" style="background:#B0291C;color:#fff"><span>danger</span><b>#B0291C</b></li><li class="chip" style="background:#FBE9E4;color:#111"><span>danger-subtle</span><b>#FBE9E4</b></li><li class="chip" style="background:#EFEDE6;color:#111"><span>neutral-subtle</span><b>#EFEDE6</b></li><li class="chip" style="background:#1B5E3F;color:#fff"><span>focus-ring</span><b>#1B5E3F</b></li></ul>
+<div class="snip"><div class="snb">
+<div class="qc"><div class="qh"><h3>Godkjenninger</h3><span class="badge b-p">3 venter</span></div>
+<div class="row"><div class="rb"><strong>Podkast-sett</strong><span>Ingrid Haugen · ons. 21. okt. 13:00–15:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården</strong><span>Jonas Dahl · tor. 22. okt. 09:00–12:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården, Morgenmøte</strong><span>Jonas Dahl · man. 19. okt. 08:00–09:00</span></div><span class="badge b-x">Utløpt</span></div>
+<div class="fld"><label>Begrunnelse</label><div class="in focus">Kameraet er på service</div><div class="err">Skriv en begrunnelse før du avslår.</div></div>
+<div class="btns"><button class="bp">Godkjenn</button><button class="bs2">Avslå</button></div>
+<div class="recent"><span>Nylig behandlet</span><div class="bl"><span class="badge b-c">Bekreftet</span><span class="badge b-r">Avslått</span><span class="badge b-n">Avbestilt</span></div></div>
+<div class="calh">Mandag 19. okt.</div>
+<div class="cal"><span class="blk own">Kundemøte Nordlys<small>10:00–11:00</small></span><span class="blk pend">Episode 12<small>Venter</small></span><span class="blk oth">Reservert<small>13:00–14:30</small></span></div>
+</div></div></div>
+<style>/* Furu hex: base=#F8F7F3, raised=#FFFFFF, sunken=#EFEDE6, ink=#22201B, ink2=#5A564D, border=#E0DCD0, bstrong=#7E786B, primary=#1B5E3F, hover=#154B33, psub=#E4F0E8, onpsub=#164D33, succ=#2E7D3E, ssub=#E6F2E3, onssub=#1D5A28, warn=#9A5600, wsub=#FFF0D2, onwsub=#774100, dang=#B0291C, dsub=#FBE9E4, ondsub=#8A2016, nsub=#EFEDE6, onnsub=#4C483F, focus=#1B5E3F
+   Kontrast (WCAG 2.x):
+   Brødtekst på surface-base: #22201B on #F8F7F3 = 15.18:1 (min 4.5) PASS
+   Sekundærtekst på surface-raised: #5A564D on #FFFFFF = 7.31:1 (min 4.5) PASS
+   Sekundærtekst på surface-base: #5A564D on #F8F7F3 = 6.82:1 (min 4.5) PASS
+   Hvit på primary: #FFFFFF on #1B5E3F = 7.72:1 (min 4.5) PASS
+   Hvit på primary-hover: #FFFFFF on #154B33 = 10.07:1 (min 4.5) PASS
+   Primary på surface-raised: #1B5E3F on #FFFFFF = 7.72:1 (min 4.5) PASS
+   on-primary-subtle på primary-subtle: #164D33 on #E4F0E8 = 8.36:1 (min 4.5) PASS
+   Bekreftet (on-success på success-subtle): #1D5A28 on #E6F2E3 = 7.14:1 (min 4.5) PASS
+   Venter (on-warning på warning-subtle): #774100 on #FFF0D2 = 7.34:1 (min 4.5) PASS
+   Avslått (on-danger på danger-subtle): #8A2016 on #FBE9E4 = 7.78:1 (min 4.5) PASS
+   Avbestilt (on-neutral på neutral-subtle): #4C483F on #EFEDE6 = 7.77:1 (min 4.5) PASS
+   Utløpt (on-warning på surface-raised): #774100 on #FFFFFF = 8.27:1 (min 4.5) PASS
+   Feiltekst danger på surface-raised: #B0291C on #FFFFFF = 6.60:1 (min 4.5) PASS
+   border-strong på surface-raised: #7E786B on #FFFFFF = 4.39:1 (min 3.0) PASS
+   focus-ring på surface-raised: #1B5E3F on #FFFFFF = 7.72:1 (min 3.0) PASS
+*/</style>
+</section>
+<section class="th v4" aria-label="Skifer">
+<header class="th-h"><h2>4 Skifer </h2><p>Tydelig og kraftfullt. Mørk navy ramme rundt lyst innhold, som et driftspanel med høy kontrast.</p></header>
+<ul class="chips"><li class="chip" style="background:#F1F3F8;color:#111"><span>surface-base</span><b>#F1F3F8</b></li><li class="chip" style="background:#FFFFFF;color:#111"><span>surface-raised</span><b>#FFFFFF</b></li><li class="chip" style="background:#E7EAF1;color:#111"><span>surface-sunken</span><b>#E7EAF1</b></li><li class="chip" style="background:#0F1522;color:#fff"><span>ink-primary</span><b>#0F1522</b></li><li class="chip" style="background:#4A5468;color:#fff"><span>ink-secondary</span><b>#4A5468</b></li><li class="chip" style="background:#D8DDE7;color:#111"><span>border</span><b>#D8DDE7</b></li><li class="chip" style="background:#6B7589;color:#fff"><span>border-strong</span><b>#6B7589</b></li><li class="chip" style="background:#1A56E8;color:#fff"><span>primary</span><b>#1A56E8</b></li><li class="chip" style="background:#1445C4;color:#fff"><span>primary-hover</span><b>#1445C4</b></li><li class="chip" style="background:#E6EDFE;color:#111"><span>primary-subtle</span><b>#E6EDFE</b></li><li class="chip" style="background:#123BAE;color:#fff"><span>on-primary-subtle</span><b>#123BAE</b></li><li class="chip" style="background:#1A7A45;color:#fff"><span>success</span><b>#1A7A45</b></li><li class="chip" style="background:#DFF3E7;color:#111"><span>success-subtle</span><b>#DFF3E7</b></li><li class="chip" style="background:#8F4F00;color:#fff"><span>warning</span><b>#8F4F00</b></li><li class="chip" style="background:#FFEFD1;color:#111"><span>warning-subtle</span><b>#FFEFD1</b></li><li class="chip" style="background:#B3261E;color:#fff"><span>danger</span><b>#B3261E</b></li><li class="chip" style="background:#FCE8E6;color:#111"><span>danger-subtle</span><b>#FCE8E6</b></li><li class="chip" style="background:#E7EAF1;color:#111"><span>neutral-subtle</span><b>#E7EAF1</b></li><li class="chip" style="background:#1A56E8;color:#fff"><span>focus-ring</span><b>#1A56E8</b></li></ul>
+<div class="snip"><div class="chrome"><span class="wm">FELLES</span><span class="nv cur">Godkjenninger <i>3</i></span><span class="nv">Kalender</span><span class="nv">Ressurser</span></div><div class="snb">
+<div class="qc"><div class="qh"><h3>Godkjenninger</h3><span class="badge b-p">3 venter</span></div>
+<div class="row"><div class="rb"><strong>Podkast-sett</strong><span>Ingrid Haugen · ons. 21. okt. 13:00–15:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården</strong><span>Jonas Dahl · tor. 22. okt. 09:00–12:00</span></div><span class="badge b-p">Venter</span></div>
+<div class="row"><div class="rb"><strong>Lysgården, Morgenmøte</strong><span>Jonas Dahl · man. 19. okt. 08:00–09:00</span></div><span class="badge b-x">Utløpt</span></div>
+<div class="fld"><label>Begrunnelse</label><div class="in focus">Kameraet er på service</div><div class="err">Skriv en begrunnelse før du avslår.</div></div>
+<div class="btns"><button class="bp">Godkjenn</button><button class="bs2">Avslå</button></div>
+<div class="recent"><span>Nylig behandlet</span><div class="bl"><span class="badge b-c">Bekreftet</span><span class="badge b-r">Avslått</span><span class="badge b-n">Avbestilt</span></div></div>
+<div class="calh">Mandag 19. okt.</div>
+<div class="cal"><span class="blk own">Kundemøte Nordlys<small>10:00–11:00</small></span><span class="blk pend">Episode 12<small>Venter</small></span><span class="blk oth">Reservert<small>13:00–14:30</small></span></div>
+</div></div></div>
+<style>/* Skifer hex: base=#F1F3F8, raised=#FFFFFF, sunken=#E7EAF1, ink=#0F1522, ink2=#4A5468, border=#D8DDE7, bstrong=#6B7589, primary=#1A56E8, hover=#1445C4, psub=#E6EDFE, onpsub=#123BAE, succ=#1A7A45, ssub=#DFF3E7, onssub=#125832, warn=#8F4F00, wsub=#FFEFD1, onwsub=#703D00, dang=#B3261E, dsub=#FCE8E6, ondsub=#8C1D16, nsub=#E7EAF1, onnsub=#3E4859, focus=#1A56E8, chrome=#121A2B
+   Kontrast (WCAG 2.x):
+   Brødtekst på surface-base: #0F1522 on #F1F3F8 = 16.44:1 (min 4.5) PASS
+   Sekundærtekst på surface-raised: #4A5468 on #FFFFFF = 7.61:1 (min 4.5) PASS
+   Sekundærtekst på surface-base: #4A5468 on #F1F3F8 = 6.86:1 (min 4.5) PASS
+   Hvit på primary: #FFFFFF on #1A56E8 = 5.93:1 (min 4.5) PASS
+   Hvit på primary-hover: #FFFFFF on #1445C4 = 7.84:1 (min 4.5) PASS
+   Primary på surface-raised: #1A56E8 on #FFFFFF = 5.93:1 (min 4.5) PASS
+   on-primary-subtle på primary-subtle: #123BAE on #E6EDFE = 7.92:1 (min 4.5) PASS
+   Bekreftet (on-success på success-subtle): #125832 on #DFF3E7 = 7.34:1 (min 4.5) PASS
+   Venter (on-warning på warning-subtle): #703D00 on #FFEFD1 = 7.86:1 (min 4.5) PASS
+   Avslått (on-danger på danger-subtle): #8C1D16 on #FCE8E6 = 7.74:1 (min 4.5) PASS
+   Avbestilt (on-neutral på neutral-subtle): #3E4859 on #E7EAF1 = 7.66:1 (min 4.5) PASS
+   Utløpt (on-warning på surface-raised): #703D00 on #FFFFFF = 8.91:1 (min 4.5) PASS
+   Feiltekst danger på surface-raised: #B3261E on #FFFFFF = 6.54:1 (min 4.5) PASS
+   border-strong på surface-raised: #6B7589 on #FFFFFF = 4.63:1 (min 3.0) PASS
+   focus-ring på surface-raised: #1A56E8 on #FFFFFF = 5.93:1 (min 3.0) PASS
+*/</style>
+</section>
+</div></body></html>

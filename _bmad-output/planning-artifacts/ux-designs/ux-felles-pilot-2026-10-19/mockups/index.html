@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="nb">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FELLES – UX-mockups</title>
+<style>
+  :root{--bg:#F5F7FA;--card:#FFFFFF;--ink:#171B22;--ink2:#596273;--border:#DCE1E8;--primary:#2452D9;--subtle:#E9EEFC;--onsubtle:#1A3FA8}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/22px Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+  main{max-width:1120px;margin:0 auto;padding:48px 32px 96px}
+  h1{font:600 28px/34px inherit;letter-spacing:-.02em;margin:0 0 8px}
+  .lead{color:var(--ink2);margin:0 0 32px;max-width:70ch}
+  h2{font:600 18px/26px inherit;margin:40px 0 12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+  a.card{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;text-decoration:none;color:inherit;box-shadow:0 1px 2px rgba(23,27,34,.06)}
+  a.card:hover{box-shadow:0 4px 12px rgba(23,27,34,.08);border-color:#7B8594}
+  a.card:focus-visible{outline:2px solid var(--primary);outline-offset:2px}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:999px;background:var(--subtle);color:var(--onsubtle);font:600 13px/1 inherit;margin-bottom:12px}
+  .title{font:500 15px/22px inherit;margin:0 0 4px}
+  .meta{font:400 13px/18px inherit;color:var(--ink2);margin:0}
+  .note{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 20px;color:var(--ink2);font-size:13px;line-height:18px}
+  code{font:12px/16px ui-monospace,Consolas,monospace;background:#EDF0F4;padding:1px 5px;border-radius:4px}
+  @media (max-width:600px){main{padding:24px 16px 64px}}
+</style>
+</head>
+<body>
+<main>
+  <h1>FELLES – UX-mockups</h1>
+  <p class="lead">Nøkkelskjermer for de åtte sidene, hver vist ved 1440 px og 375 px med de tilstandene som styrer layouten. Mockupene illustrerer. <code>DESIGN.md</code> og <code>EXPERIENCE.md</code> er kontrakten og vinner ved konflikt.</p>
+
+  <h2>De åtte sidene</h2>
+  <div class="grid">
+    <a class="card" href="key-innlogging.html"><span class="num">1</span><p class="title">Innlogging</p><p class="meta">Hvile, fokus og generell feilmelding · AUT-01</p></a>
+    <a class="card" href="key-dashboard.html"><span class="num">2</span><p class="title">Hjem (Dashboard)</p><p class="meta">Administrator med 7-dagerspanel og diagram; medlem på mobil med tom tilstand · VIS-03, VIS-04, VIS-06</p></a>
+    <a class="card" href="key-ressurser.html"><span class="num">3</span><p class="title">Ressurser og ressursdetalj</p><p class="meta">Søk, filter, kort, detalj med tilgjengelighet, tomt søk · RES-01, RES-05</p></a>
+    <a class="card" href="key-kalender.html"><span class="num">4</span><p class="title">Kalender</p><p class="meta">Ukevisning, bookingskjema med tidsvelger, konflikt · VIS-01, BOK-07</p></a>
+    <a class="card" href="key-mine-bookinger.html"><span class="num">5</span><p class="title">Mine bookinger</p><p class="meta">Kommende og tidligere, avbestill-bekreftelse, avslagsbegrunnelse · VIS-02, BOK-06, APP-04</p></a>
+    <a class="card" href="key-godkjenninger.html"><span class="num">6</span><p class="title">Godkjenninger</p><p class="meta">Kø med utløpt og egen forespørsel, begrunnelsesdialog, tom kø · APP-01…04, CR-3</p></a>
+    <a class="card" href="key-ressursadministrasjon.html"><span class="num">7</span><p class="title">Ressursadministrasjon</p><p class="meta">Tabell, skjema med feltfeil, avvist arkivering, arkiverte · RES-03, RES-04</p></a>
+    <a class="card" href="key-aktivitet.html"><span class="num">8</span><p class="title">Aktivitet</p><p class="meta">Tidslinje for administrator og medlem, laster, tom · VIS-05</p></a>
+  </div>
+
+  <h2>Alternativer vurdert under arbeidet</h2>
+  <div class="grid">
+    <a class="card" href="../.working/color-themes-1.html"><p class="title">Fargetemaer</p><p class="meta">Fjord (anbefalt), Granitt, Furu, Skifer</p></a>
+    <a class="card" href="../.working/direction-rolig-saas.html"><p class="title">Retning A – Rolig SaaS (anbefalt)</p><p class="meta">Lys sidemeny, kort, faner på mobil</p></a>
+    <a class="card" href="../.working/direction-kompakt-verktoy.html"><p class="title">Retning B – Kompakt verktøy</p><p class="meta">Toppmeny, tettere, tabeller</p></a>
+    <a class="card" href="../.working/direction-varm-kontor.html"><p class="title">Retning C – Varm kontor</p><p class="meta">Mørk sidemeny, varme flater, grønn primærfarge</p></a>
+  </div>
+
+  <p class="note" style="margin-top:32px">Mockupene bruker systemfont i stedet for Inter og er statiske (ingen JavaScript). Desktoprammen er 1440 px bred, så siden kan rulle sidelengs i en smalere nettleser; selve appen skal aldri gjøre det.</p>
+</main>
+</body>
+</html>
