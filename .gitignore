@@ -24,3 +24,10 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# FELLES local data
+data/
+*.db-wal
+*.db-shm
+*.db*
+_bmad-output/evidence/
