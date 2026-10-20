@@ -29,20 +29,20 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 # - Retrospective appends its action items to action_items; the status view surfaces open ones
 generated: 10-19-2026 19:55
-last_updated: 10-19-2026 19:55
+last_updated: 10-20-2026 07:48
 project: felles-pilot
 project_key: NOKEY
 tracking_system: file-system
 story_location: _bmad-output/implementation-artifacts
 development_status:
-  epic-1: backlog
-  1-1-scaffold-the-workspaces-and-a-green-verify-gate-on-a-clean-i: backlog
-  1-2-shared-rules-normalisers-and-approved-messages-in-contracts: backlog
-  1-3-clock-oslo-time-configuration-and-logging: backlog
-  1-4-the-complete-route-and-dto-contract-set: backlog
-  1-5-database-platform-apperror-and-the-unit-of-work: backlog
-  1-6-migration-runner-and-schema-snapshot-harness: backlog
-  1-7-the-whole-schema-triggers-and-probe-suite: backlog
+  epic-1: in-progress
+  1-1-scaffold-the-workspaces-and-a-green-verify-gate-on-a-clean-i: review
+  1-2-shared-rules-normalisers-and-approved-messages-in-contracts: review
+  1-3-clock-oslo-time-configuration-and-logging: review
+  1-4-the-complete-route-and-dto-contract-set: review
+  1-5-database-platform-apperror-and-the-unit-of-work: review
+  1-6-migration-runner-and-schema-snapshot-harness: review
+  1-7-the-whole-schema-triggers-and-probe-suite: review
   1-8-route-registration-kernel-with-stubs: backlog
   1-9-http-hardening-static-serving-and-request-logging: backlog
   1-10-password-hashing-session-resolution-and-policy: backlog

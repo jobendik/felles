@@ -186,6 +186,21 @@ pm` global packages (cline, codex, dependency-cruiser, jscpd, localtunnel, madge
 - **Gate state:** decisions recorded and the package updated. Jo's decision on the amended package is the approval the gate story requires; Jo paused implementation before Story 1.8 in the same message ("temporarily pausing implementation to get Agent Orchestrator working and demonstrate its visual workflow"). **Stories 1.8 onward are not started.** The ledger entry for the gate is backfilled by Story 1.23.
 - **Pilot-log push:** Jo authorised pushing the pilot-log-only commit `19feca8` to `main` as a safe fast-forward; this entry is part of the same pilot-log-only change set.
 
+### Gate S00-CP approval and Agent Orchestrator set-up (Jo, 2026-10-20)
+
+- **Human intervention 4:** Jo explicitly approved Gate S00-CP. The amended contracts (content hash `9af7e4e24c193567286f01d389209ea2f0b44e120acc9b08772a8a3c4973bdc9`) and the unchanged schema (hash `4186863856f53df10bb2efa0abc3db2fd2f31b17f85949c71c788c561d233108`) are accepted. Story 1.8 may begin once the AO worker's branch and workspace are verified.
+- **Jo's Agent Orchestrator decisions (same message):**
+  1. One AO worker for the remainder of S00, Stories 1.8 to 1.30, preserving one worker per slice.
+  2. One draft PR per slice targeting `main`, for AO visibility, CI and independent review, with no GitHub merging, no auto-merging and no bypassing of the merge gate.
+  3. AO's Codex reviewer at slice level before the merge gate; reviewer approval is evidence and not human acceptance.
+  4. A dedicated bookkeeping worker for small fast-forward updates to `main`, restricted to the pilot log, sprint-status and later approved ledger data, with no code or contract changes, no history rewriting, no approvals Jo has not given, no acceptance tags, and a stop if branches diverge.
+- **Jo's requirements:** continue the approved BMad implementation workflow (`bmad-build`) with its prescribed tooling and checkpoints; the S00 worker resumes from `slice/s00` at `18bfd62` and preserves Stories 1.1 to 1.7; all human approval gates, story-level commits, test requirements, resource-usage logging and merge restrictions remain.
+- **Checkout switch:** Jo authorised switching the `C:\Projects\felles-pilot` checkout from `slice/s00` to `main` after verification. The orchestrator did this on 2026-10-20: working tree clean, no unpushed commits on any local branch, no stash entries, `slice/s00` = `origin/slice/s00` = `18bfd62`, a plain `git checkout main` (no force, no reset).
+- **Decision A (BMad artefact ownership):** the installed `bmad-build` workflow writes story specs, epic context, deferred-work and sprint-status under `_bmad-output/implementation-artifacts/`, which Story 1.22 makes main-only. Jo decided to resolve this before Story 1.8 rather than at Story 1.22, and authorised a narrowly scoped `bmad-correct-course` to reconcile the ownership rules with `bmad-build`. Jo's preferred outcome: story specifications, epic context and deferred-work files may be committed on their owning slice branch; `sprint-status.yaml`, the pilot log, the acceptance ledger and evidence bookkeeping stay main-only; Story 1.22's ownership rules must agree with this. The change is to be minimal, without redesigning or revalidating the architecture, and is presented to Jo for approval before it is applied. Story 1.8 does not begin until Phase 0 is verified, the conflict is formally resolved and Jo has approved the amendment.
+- **Decision B (human checkpoints):** Jo confirmed that the prescribed `bmad-build` workflow is followed, including Jo's own approval of every story specification at Checkpoint 1, with no auto-approval. The time and overhead of these checkpoints are recorded in this log.
+- **Decision C (observation recorded at Jo's request):** Stories 1.1 to 1.7 were implemented without the installed `bmad-build` workflow. `slice/s00` has no `bmad-build` story specs, epic context or review triage for them, and the Phase B0 facts record no subagents. They are not rebuilt. Jo regards this as an important pilot observation.
+- **Sprint status:** `epic-1` set to `in-progress` and Stories 1-1 to 1-7 to `review`: implemented and verified on `slice/s00` but not integrated or accepted. `done` is set only by `accept-slice.mjs` at Jo's acceptance (epics.md, State model).
+
 ---
 
 ## Next phase
