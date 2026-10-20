@@ -1,0 +1,12 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+data
+_bmad
+_bmad-output
+.claude
+docs
+package-lock.json
+eslint-fixtures
