@@ -233,6 +233,88 @@ pm` global packages (cline, codex, dependency-cruiser, jscpd, localtunnel, madge
 
 ---
 
+## Phase B1 — Agent Orchestrator coordination and termination · 2026-10-20
+
+### Facts
+- **Termination:** Jo terminated the pilot at 13:28:32 as a deliberate decision: "We are ending the FELLES BMad + Agent Orchestrator pilot at its current checkpoint. This is a deliberate human decision to terminate the experiment, not a request to continue implementation." Story 1.8 Checkpoint 1 was pending and not approved; nothing of Story 1.8 was implemented. Stories 1.9 to 1.30 and slices S01 to S07 were not started.
+- **Progress at termination:**
+  - Planning (PRD, UX, architecture, epics, sprint planning): complete before this session; Amendment 4 added and merged on 2026-10-20.
+  - S00 Stories 1.1 to 1.7: implemented and verified on `slice/s00` (283 tests green) before AO; built without the installed `bmad-build` workflow (pilot observation, Decision C); sprint-status `review`.
+  - Gate S00-CP: explicitly approved by Jo (09:27), recorded in this log.
+  - Story 1.8: spec drafted with `bmad-build`; Open Questions answered by Jo; Checkpoint 1 pending, not approved; spec and epic context uncommitted in the S00 worktree, copied as evidence.
+  - Stories 1.9 to 1.30, slices S01 to S07: not started.
+  - Merge gate, ownership check, ledger, trace, CI (Stories 1.19 to 1.29): not built.
+  - Slice integration or acceptance: none.
+- **Data labels:** *Measured* means read from Git, GitHub or the Claude Code session transcripts. *Reported* means stated by an agent and not independently measured. *Estimate* means approximate. *Unknown* means not available. Token figures are input + cache creation + output, summed per assistant message in the transcripts (subagent files included), with cache reads shown separately. Cost is unknown throughout.
+- **Resource use (measured from the transcripts unless marked):**
+
+  | Session | Role | Wall clock | Tokens (in + cache creation + out) | Cache reads | Subagents |
+  | --- | --- | --- | --- | --- | --- |
+  | felles-pilot-1 | orchestrator | 09:13:59 to about 13:30 (still running for this report) | 694,019 by 13:29, excluding this final turn | 29,661,898 | none |
+  | felles-pilot-3 | S00 worker | 09:48:07 to 13:29:16 | 330,986 | 3,590,687 | 1 (Epic 1 context, 11:37:31 to 11:38:22: 58,593 measured; 58,799 reported by the harness) |
+  | felles-pilot-4 | planning worker (correct course) | 09:49:21 to 13:29:21 | 336,505 | 6,734,232 | none |
+  | felles-pilot-2 | bookkeeping | 09:48:00 to 11:37:16, plus the final update | 94,918 before the final update | 1,032,622 | none |
+  | **Total** | | | **about 1.46 M by 13:29** (final update and final turn not included) | **about 41.0 M** | 1 |
+
+  Breakdown of the planning worker: proposal 123,916 (09:49 to 09:53); applying the amendment 68,869; handling the Sourcery comments and the termination acknowledgement 143,720, mostly cache creation after the cache expired during idle time.
+- **Time and human gates:**
+  - Session start to termination: 09:13:59 to 13:28:32 (4 h 15 min).
+  - Gate S00-CP approval and the AO set-up decisions: 09:27 and 09:47.
+  - Workers spawned at 09:47 and 09:48. Phase 0 of the S00 worker was green at 09:51, so its branch and environment were verified within 4 min.
+  - Amendment 4: proposal 09:49 to 09:53; Jo approved at 10:08; blocked by the permission classifier from 10:11 to 10:54 (two rounds); PR #2 opened at about 10:58; merged by Jo at 11:35:29. Jo reported the merge at 11:18 and 11:29, before GitHub recorded it; the orchestrator verified on GitHub each time and waited.
+  - Story 1.8: started 11:37; the Open Questions halt came at 11:41; Jo answered at 12:19:21; Checkpoint 1 was raised at 12:19; the pilot was terminated at 13:28 with the checkpoint still open. Of the 42 min from start to checkpoint, about 38 min was waiting for Jo. Measured worker processing time was about 4 to 5 min.
+  - Human interventions: 11 messages from Jo to the orchestrator (09:13, 09:27, 09:47, 10:08, 10:24, 10:30, 10:54, 11:18, 11:29, 12:19, 13:28) and one GitHub action (merging PR #2). Jo never typed directly into a worker session; every instruction to a worker was relayed by the orchestrator.
+- **Blockers and frictions:**
+  1. Branch lock: `slice/s00` was checked out in the project's main checkout, so an AO worktree could not use it; the orchestrator switched that checkout to `main` after verifying it was safe, as Jo authorised.
+  2. The installed `bmad-build` workflow conflicted with the planned ownership rules (output paths made main-only by Story 1.22), requiring Amendment 4 (D1 to D9); it surfaced only because Stories 1.1 to 1.7 had not used `bmad-build`.
+  3. Claude Code's permission classifier denied planning-artefact edits as "Modify Shared Resources" in two rounds; they went through only after further relayed authorisations from Jo, and the worker never worked around a denial.
+  4. `ao send` rejected long instructions (`MESSAGE_TOO_LONG`), so instructions were passed as files in the orchestrator's artifact directory.
+  5. The Sourcery GitHub app reviewed PR #2 and AO forwarded its 5 comments to the planning worker as review work; the orchestrator stopped the worker from acting on them.
+  6. Report reliability: some worker reports gave UTC times labelled as Oslo, or estimates, corrected from the transcripts; routine checkpoint reports arrived in batches, sometimes after the orchestrator had already checked the state.
+  7. Premature merge reports: PR #2 was reported merged twice before GitHub showed it; checking GitHub prevented a sync against a `main` without the amendment.
+  8. Idle cost: a one-line acknowledgement from the planning worker after about 2 h idle cost about 144k tokens, because the prompt cache had to be rebuilt.
+- **Unresolved tests and open items:**
+  - Story 1.8 Checkpoint 1: spec not approved. Evidence is kept in `C:\Users\joben\.ao\data\artifacts\felles-pilot-1\evidence\story-1-8\` (the spec, the epic context and the checkpoint summaries). SHA-256 values:
+    - `spec-1-8-route-registration-kernel-with-stubs.md` `843543c7816ab70f6012123e3baf56c827756d0a3ce587d9df6883280c978430`
+    - `epic-1-context.md` `695985717e2f286450f13649e0d0636cfabaeced9f126ad6620fb31d660cceb6`
+    - `story-1-8-checkpoint-1.md` `8e16ceabe3ad7bc76c180aab2c87042950ddd2711b2f871734991c2ebe674ab5`
+    - `story-1-8-open-questions.md` `ff1a8d42684966e6040ef8d4624b44d7658d9c799d05d9965fe8a75cecbe9450`
+  - The originals remain uncommitted in the S00 worktree `C:\Users\joben\.ao\data\worktrees\felles-pilot\felles-pilot-3`.
+  - Never exercised: the merge gate (1.24), the ownership check (1.22), the ledger (1.23), trace and evidence (1.19 to 1.21), CI and the macOS smoke (1.29), the hello-slice dry run and freeze package (1.30), the Codex slice review, `accept-slice.mjs`, the parallel slices S01 ∥ S02 and S04 ∥ S05 ∥ S06, deliberate resume and reassignment, and the handling of a real test failure.
+  - The Amendment 4 rules (slice-owned `bmad-build` records, safe naming procedure, D4 restore-and-stage) were never exercised by a real story commit.
+  - Open documentation findings: AD-20 now applies "(append-only, `merge=union`)" to `sprint-status.yaml` too, a defect introduced by Amendment 4 B1; section 8 of `AMENDMENT-4-proposal.md` still lists D1 to D6 as open; 5 Sourcery threads on PR #2 are unresolved; the Story 1.8 spec places the error handler differently from the spine tree (to be reconciled at Story 1.22).
+  - Earlier register items still open: story-size monitoring (1.13, 1.20, 1.24, 1.30), OQ-5 (macOS smoke), and the EXPERIENCE flow text against the seed.
+- **Shutdown:** no worker is running; all four AO sessions are idle; no automations, Cues or orchestrator watches exist. Nothing was merged, reset, rebased, deleted or force-pushed. PR #1 stays an open draft.
+
+### ORK-01 to ORK-10 against observed results
+
+Verdicts: **Met**, **Partly observed** (some of the criterion was seen in practice, the rest was not exercised), or **Untested** (never exercised). No criterion is marked failed, because none was tested to the point of failure.
+
+| ID | Criterion (PRD §10) | Verdict | Observed |
+| --- | --- | --- | --- |
+| ORK-01 | Requirement to slice to task traceable; every MUST has an owner slice and test evidence | **Untested** | The planning-level mapping exists (Story Index, evidence parts `REQ@slice`, test titles `[REQ] … (@N.M)` in Stories 1.1 to 1.7). The trace tooling (Stories 1.19 and 1.20) was never built, so test evidence per MUST was never produced. |
+| ORK-02 | Dependencies govern order; S03 does not start before S01 and S02 are accepted | **Untested** | S03 was never reached. Within S00, human gates did govern order: Story 1.8 was held until Gate S00-CP, Amendment 4, the PR merge and the slice/s00 sync were all complete. |
+| ORK-03 | Two agents work in parallel; S01 and S02 in separate worktrees with no shared-file conflict | **Untested** | No parallel slices. Three AO workers ran concurrently in separate worktrees (S00, planning, bookkeeping) with no file conflicts, but they were not parallel slices. |
+| ORK-04 | Live monitoring is useful; the board shows agent status, active task, last event, blocker, test result and branch | **Partly observed** | Shown: one card per session with name, status (working, idle, needs_input, draft), branch, PR, CI and review columns, and activity age. Needs-input reports carried the blockers. Not shown: test results (CI `unknown`, because CI arrives in Story 1.29), the current story inside a slice, or why a worker was blocked. Jo reported at 10:54 that the "board stopped progressing" while a worker was blocked by the permission classifier; the board did not make that blocker obvious. Routine reports arrived batched, some after the event. |
+| ORK-05 | Interrupted work can resume from repo, status and log; blockers logged; tasks reassignable | **Untested** | Not deliberately tested. Related evidence: the AO S00 worker continued correctly from `18bfd62`, built by an earlier non-AO session, using only the repository, the plan and the pilot log. The planning worker resumed three times after permission denials. No mid-task kill or reassignment was tried. |
+| ORK-06 | A real test failure blocks completion | **Untested** | No test failure occurred. `npm run verify` was green at every check (283 tests). |
+| ORK-07 | QA before integration; review and tests on the exact commit before merge | **Untested** | No slice merge happened, and the Codex slice review (Jo's decision 3) was never triggered. Story-level bmad-build review layers never ran, because Story 1.8 stopped before implementation. |
+| ORK-08 | History is understandable: open requirement to story to run to commit to test evidence | **Partly observed** | Requirement to story: yes (epics). Story to run: yes (AO sessions and transcripts, Story 1.8 spec). Run to commit: yes for the AO work (`b51a4d5`, `e28cb6a`, `b3c2080`, `536b51b`, `8202c74`, `ba0215b`). Commit to test evidence: only as `verify` output in reports; no ledger or trace. Stories 1.1 to 1.7 have commits and tests but no bmad-build records. |
+| ORK-09 | Resource use visible: time, runs, cost or `unknown` | **Met**, with caveats | Time and tokens were measured per session from the transcripts (section 3); cost is recorded as `unknown`, which the criterion allows. Caveats: AO shows no token or cost data; agents' own figures were sometimes wrong (UTC times labelled as Oslo, an estimate of about 115k tokens against a measured 123,916), so the orchestrator corrected them from the transcripts. |
+| ORK-10 | Deterministic integration; parallel branches merge only when shared integration tests are green | **Untested** | No merge gate and no parallel branches. The only merges were Jo's GitHub merge of planning PR #2 (approved exception D7) and the ordinary main-into-slice/s00 merge (D8). |
+
+Summary: 1 Met, 2 Partly observed, 7 Untested, 0 failed.
+
+### Interpretations
+These are the orchestrator's interpretations, not measurements.
+- Most of the elapsed time was spent waiting at human gates, not doing agent work. Story 1.8 took about 4 to 5 min of measured worker processing in a 42 min span to Checkpoint 1. The prescribed per-story spec approval, applied to 23 S00 stories, would dominate the S00 schedule unless approvals are batched or delegated.
+- The integration of BMad and AO surfaced tool-contract conflicts that planning reviews had not found: `bmad-build`'s output paths against the ownership rules, and Claude Code's permission classifier against planning edits. Both appeared only when the installed tools were actually run.
+- AO's board was most useful for session-level state (working, idle, needs input, PR). It did not show story-level progress, test results before CI existed, or why a worker was blocked, so the orchestrator relied on transcripts and direct Git and GitHub checks.
+
+Full evaluation: `C:\Users\joben\.ao\data\artifacts\felles-pilot-1\felles-pilot-final-evaluation.md` (outside the repository).
+
+---
+
 ## Next phase
 
-Architecture is final and committed. Next: `bmad-create-epics-and-stories` (BMad catalog: architecture is followed by epics and stories). `bmad-spec` is the skill's optional adoption step and is not required for this pilot. OQ-1…OQ-5 stay deferred; OQ-6 is closed by this phase. Before S00: Jo installs Node 24 LTS.
+None. The pilot was terminated by Jo on 2026-10-20 at Story 1.8 Checkpoint 1 (see Phase B1). No further phase is planned in this pilot.
