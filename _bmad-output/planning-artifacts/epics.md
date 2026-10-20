@@ -10,6 +10,7 @@ inputDocuments:
   - _bmad-output/planning-artifacts/architecture/architecture-felles-pilot-2026-10-19/AMENDMENT-1-proposal.md
   - _bmad-output/planning-artifacts/architecture/architecture-felles-pilot-2026-10-19/AMENDMENT-2-proposal.md
   - _bmad-output/planning-artifacts/architecture/architecture-felles-pilot-2026-10-19/AMENDMENT-3-proposal.md
+  - _bmad-output/planning-artifacts/architecture/architecture-felles-pilot-2026-10-19/AMENDMENT-4-proposal.md
   - _bmad-output/planning-artifacts/ux-designs/ux-felles-pilot-2026-10-19/DESIGN.md
   - _bmad-output/planning-artifacts/ux-designs/ux-felles-pilot-2026-10-19/EXPERIENCE.md
 ---
@@ -905,7 +906,7 @@ So that I can decide on acceptance from complete evidence.
 
 **Given** `manual-evidence/<reqId>.md`
 **When** it records a non-automatable part
-**Then** it must name the tested parent commit, the tester, the date, the tool or procedure and the result, and `--release` accepts a commit whose only changes against the cited commit are under `manual-evidence/**` or are main-only paths (`acceptance-ledger.json`, `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**`, `_bmad-output/implementation-artifacts/**`); a change to the lockfile or to dependency files between the cited commit and landing is not allowed, because it changes what was tested
+**Then** it must name the tested parent commit, the tester, the date, the tool or procedure and the result, and `--release` accepts a commit whose only changes against the cited commit are under `manual-evidence/**`, are main-only paths (`acceptance-ledger.json`, `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**`, `_bmad-output/implementation-artifacts/**` outside the slice-owned build records), or are slice-owned build records (`_bmad-output/implementation-artifacts/{spec-*,epic-*-context,deferred-work-s*}.md`); a change to the lockfile or to dependency files between the cited commit and landing is not allowed, because it changes what was tested
 **And** the file is owned by S07 once `s00-accepted` exists.
 
 **Given** the gate-type parts (NFR-02, RUN-1, SEED-1, UI-2)
@@ -928,7 +929,7 @@ So that parallel agents cannot touch each other's files or frozen contracts.
 
 **Given** the frozen list of AD-20
 **When** the check classifies paths
-**Then** `packages/contracts/**`, migrations 0001–0099, route and nav tables, existing `ui/` primitives, configs, root scripts, `ownership.json`, `requirements.json` and `acceptance-ledger.json` are frozen, files added under `ui/` pass, `packages/contracts/src/{activity,dashboard}.ts` and the schedule DTO exports belong to S03 until `s03-accepted`, and `_bmad-output/implementation-artifacts/**`, `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**` and `acceptance-ledger.json` are main-only
+**Then** `packages/contracts/**`, migrations 0001–0099, route and nav tables, existing `ui/` primitives, configs, root scripts, `ownership.json`, `requirements.json` and `acceptance-ledger.json` are frozen, files added under `ui/` pass, `packages/contracts/src/{activity,dashboard}.ts` and the schedule DTO exports belong to S03 until `s03-accepted`, and `_bmad-output/implementation-artifacts/sprint-status.yaml`, `_bmad-output/implementation-artifacts/ledger/**`, every other path under `_bmad-output/implementation-artifacts/` that is not a slice-owned build record (the freeze package, the evidence pack, an unsuffixed `deferred-work.md`, scratch files), `_bmad-output/pilot-log.md`, `_bmad-output/evidence/**` and `acceptance-ledger.json` are main-only, while the slice-owned build records of the default rules below are classified by `ownership.json`
 **And** S07 may edit any non-frozen file when the commit carries a `Fixes: N.M` trailer, and `README.md` and `manual-evidence/**` map to S07 after `s00-accepted`.
 
 **Given** S00 creates stubs, seam entries, barrels or helpers for other slices
@@ -938,8 +939,13 @@ So that parallel agents cannot touch each other's files or frozen contracts.
 
 **Given** paths that no Owns cell names
 **When** `ownership.json` is generated
-**Then** default rules apply: a colocated test (`*.test.ts(x)`) follows the owner of its sibling source; the files directly inside `apps/web/src/features/<f>/` (`index.tsx`, `*Page.tsx`) follow the slice that owns the feature's sub-folders (`features/resources/` is S02), except the seam entry bodies of `features/bookings/index.tsx` and `features/booking-actions/index.tsx`, which `ownership.json` assigns per body as in Story 1.27; API tests of a slice live under `apps/api/test/<slice>/**` and its helper in `apps/api/test/helpers/<slice>.ts`; `packages/contracts/test/<file>.test.ts` follows the owner of the contract file (S00 unless the file is S03's draft); the lockfile and root and workspace dependency files are frozen and change only with a `Freeze-Approved:` trailer; a test that asserts a stub's behaviour lives beside the stub, belongs to the replacing slice and is replaced with it, and tests of S00-owned code inject their collaborators (a page component, a pending count) instead of asserting a stub's output
+**Then** default rules apply: a colocated test (`*.test.ts(x)`) follows the owner of its sibling source; the files directly inside `apps/web/src/features/<f>/` (`index.tsx`, `*Page.tsx`) follow the slice that owns the feature's sub-folders (`features/resources/` is S02), except the seam entry bodies of `features/bookings/index.tsx` and `features/booking-actions/index.tsx`, which `ownership.json` assigns per body as in Story 1.27; API tests of a slice live under `apps/api/test/<slice>/**` and its helper in `apps/api/test/helpers/<slice>.ts`; `packages/contracts/test/<file>.test.ts` follows the owner of the contract file (S00 unless the file is S03's draft); the lockfile and root and workspace dependency files are frozen and change only with a `Freeze-Approved:` trailer; a test that asserts a stub's behaviour lives beside the stub, belongs to the replacing slice and is replaced with it, and tests of S00-owned code inject their collaborators (a page component, a pending count) instead of asserting a stub's output; the `bmad-build` records under `_bmad-output/implementation-artifacts/` follow the Story Index: `spec-<E>-<M>-*.md` belongs to the slice of Story E.M (one entry per story), `epic-<N>-context.md` to the slice of Story N.1 (so `epic-4-context.md` is S03's and S04 reads it without committing a change to it), and `deferred-work-s<NN>.md` to slice S<NN>
 **And** a path that still has no owner fails the test of this story and is added to `ownership.json` by this story.
+
+**Given** the main-only and slice-owned classes
+**When** the check runs on fixtures
+**Then** a slice branch that changes its own spec, epic context or deferred-work file passes, and a slice branch that changes another slice's spec, `sprint-status.yaml`, a `ledger/**` file, the unsuffixed `deferred-work.md`, `_bmad-output/pilot-log.md` or `_bmad-output/evidence/**` fails naming the file
+**And** a test asserts that the generated entries cover every story of the Index (`spec-<E>-<M>-*.md`), every epic (`epic-<N>-context.md`) and every slice (`deferred-work-s<NN>.md`) exactly once, and that `spec-1-1-*` does not match `spec-1-10-…`.
 
 **Given** `npm run verify` on `slice/sNN` or with `FELLES_SLICE` set
 **When** it runs
@@ -964,7 +970,7 @@ So that the bookkeeping the gates rely on is deterministic whether a human or Ag
 
 **Given** `scripts/ledger.mjs story <N.M> implemented|tested|reviewed --sha <sha>`
 **When** it runs on `main`
-**Then** it appends an entry to the story's ledger under `_bmad-output/implementation-artifacts/`, refuses a commit that is not reachable from the story's slice branch, refuses `reviewed` without a `tested` entry for the same tree, and records agent completion as at most `implemented` (PIL-03)
+**Then** it appends an entry to the story's ledger under `_bmad-output/implementation-artifacts/ledger/`, refuses a commit that is not reachable from the story's slice branch, refuses `reviewed` without a `tested` entry for the same tree, and records agent completion as at most `implemented` (PIL-03)
 **And** it refuses to write on any branch other than `main`.
 
 **Given** `scripts/ledger.mjs status <N.M> <state>` and `scripts/ledger.mjs gate S00-CP done --approval <PL-id>`
@@ -2312,7 +2318,7 @@ So that I can decide whether to accept the product and judge the workflow.
 
 ## Story Index (task cards, PIL-05)
 
-Every story belongs to exactly one slice. This index carries the PIL-05 task-card fields that the template does not hold; it is the source from which `requirements.json` (Story 1.19) and `ownership.json` (Story 1.22) are generated. *Owns* cells are path globs only (most specific glob wins; the default rules of Story 1.22 cover what a cell leaves out). Each path has one owner at any time; a path an S00 row creates for another slice is a `(stub)` recorded as `createdBy: S00` and owned by the later slice after `s00-accepted`; anything not listed is frozen or another slice's. `README.md` and `manual-evidence/**` belong to S00 until `s00-accepted` and to S07 afterwards.
+Every story belongs to exactly one slice. This index carries the PIL-05 task-card fields that the template does not hold; it is the source from which `requirements.json` (Story 1.19) and `ownership.json` (Story 1.22) are generated. *Owns* cells are path globs only (most specific glob wins; the default rules of Story 1.22 cover what a cell leaves out). Each path has one owner at any time; a path an S00 row creates for another slice is a `(stub)` recorded as `createdBy: S00` and owned by the later slice after `s00-accepted`; anything not listed is frozen or another slice's. The `bmad-build` records `spec-<E>-<M>-*.md`, `epic-<N>-context.md` and `deferred-work-s<NN>.md` under `_bmad-output/implementation-artifacts/` are slice-owned by the default rules of Story 1.22; `sprint-status.yaml`, the ledger files, the pilot log and the evidence files are main-only. `README.md` and `manual-evidence/**` belong to S00 until `s00-accepted` and to S07 afterwards.
 
 ### Branching and integration model
 
@@ -2325,7 +2331,7 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 - **Story state** is the sprint-status value (`backlog`, `ready-for-dev`, `in-progress`, `review`, `done`). Story ledger entries `implemented`, `tested` and `reviewed` cite the slice-branch commit and are written on main by `scripts/ledger.mjs` (Story 1.23), driven by a human or by Agent Orchestrator; agent completion is at most `implemented` (PIL-03). `done` is set by `accept-slice.mjs` for every story of a slice in the same act as Jo's acceptance; between `integrated` and `accepted` all its stories show `review`, as intended.
 - **Slice state** is `integrated` (landed by the merge gate with all slice evidence passing, tag `sNN-integrated`) then `accepted` (Jo, tag `sNN-accepted`). One acceptance only.
 - **Requirement state** is computed, never stored: an evidence part passing at an integrated slice is `evidenced`; at an accepted slice it is `verified`.
-- **Registries:** sprint-status (story state), story ledger entries (evidence per story commit), `acceptance-ledger.json` plus tags (slice state), `trace.json` (computed evidence), `pilot-log.md` (metrics). Sprint-status is the only registry of delivery status (PIL-04); the others record evidence.
+- **Registries:** sprint-status (story state), story ledger entries (evidence per story commit), `acceptance-ledger.json` plus tags (slice state), `trace.json` (computed evidence), `pilot-log.md` (metrics). Sprint-status is the only registry of delivery status (PIL-04); the others record evidence, and the `status` field of a `bmad-build` spec is the workflow's working state, never read as delivery status.
 
 ### Task-card fields
 
@@ -2361,7 +2367,7 @@ Every story belongs to exactly one slice. This index carries the PIL-05 task-car
 | 1.20 | S00 | 1.19 | — | `scripts/trace.mjs`, `scripts/trace-reporter.mjs`, `vitest.config.ts`, `e2e/playwright.config.ts` |
 | 1.21 | S00 | 1.20 | — | `package.json` script `verify:release`, `manual-evidence/` convention |
 | 1.22 | S00 | Gate S00-CP, 1.1 | — | `ownership.json`, `scripts/check-ownership.mjs` |
-| 1.23 | S00 | 1.19, 1.22 | — | `scripts/ledger.mjs`, story ledger files under `_bmad-output/implementation-artifacts/` |
+| 1.23 | S00 | 1.19, 1.22 | — | `scripts/ledger.mjs`, story ledger files under `_bmad-output/implementation-artifacts/ledger/` (main-only) |
 | 1.24 | S00 | 1.18, 1.20, 1.22, 1.23 | — | `scripts/merge-gate.mjs` |
 | 1.25 | S00 | 1.24 | — | `scripts/accept-slice.mjs` |
 | 1.26 | S00 | 1.13, 1.15, 1.16, 1.17, 1.18 | UI-2@S00, UI-3@S00 | `apps/web/src/app/{shell,providers}/**`, `apps/web/src/ui/Avatar*`, `apps/web/src/test/**` |
